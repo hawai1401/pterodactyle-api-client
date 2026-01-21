@@ -76,9 +76,9 @@ export namespace ReturnValue {
     api_key: string;
   }
 
-  export interface UserActivityList<T extends UserEvent | AuthEvent> {
+  export interface UserActivityList<U, T extends UserEvent | AuthEvent> {
     object: "list";
-    data: UserActivityEvent<T>[];
+    data: UserActivityEvent<U, T>[];
   }
 
   export type SshKeysParsed = {
@@ -87,32 +87,33 @@ export namespace ReturnValue {
   };
 
   export interface UserActivityEvent<
-    T extends UserEvent | AuthEvent = UserEvent | AuthEvent,
+    T,
+    U extends UserEvent | AuthEvent = UserEvent | AuthEvent,
   > {
     object: "activity_log";
     attributes: {
       id: string;
       batch: null;
-      event: T;
+      event: U;
       is_api: boolean;
       ip: IP;
       description: null;
       properties: {
-        identifier: T extends "user:api-key.create"
+        identifier: U extends "user:api-key.create"
           ? string
-          : T extends "user:api-key.delete"
+          : U extends "user:api-key.delete"
             ? string
             : undefined;
-        fingerprint: T extends "user:ssh-key.create"
+        fingerprint: U extends "user:ssh-key.create"
           ? string
-          : T extends "user:ssh-key.delete"
+          : U extends "user:ssh-key.delete"
             ? string
             : undefined;
-        old: T extends "user:email-changed" ? string : undefined;
-        new: T extends "user:email-changed" ? string : undefined;
+        old: U extends "user:email-changed" ? string : undefined;
+        new: U extends "user:email-changed" ? string : undefined;
       };
       has_additional_metadata: boolean;
-      timestamp: string;
+      timestamp: T;
     };
   }
 }
@@ -182,12 +183,14 @@ export default class Account {
     );
   }
 
-  enableA2f({ password, code }: MethodArgs.EnableA2f): Promise<ReturnValue.RecoveryTokens> {
-    return this.httpClient.request<ReturnValue.RecoveryTokens, MethodArgs.EnableA2f>(
-      "POST",
-      "/client/account/two-factor",
-      { password, code },
-    );
+  enableA2f({
+    password,
+    code,
+  }: MethodArgs.EnableA2f): Promise<ReturnValue.RecoveryTokens> {
+    return this.httpClient.request<
+      ReturnValue.RecoveryTokens,
+      MethodArgs.EnableA2f
+    >("POST", "/client/account/two-factor", { password, code });
   }
 
   disabledA2f({ password }: MethodArgs.EditAcount): Promise<void> {
@@ -264,7 +267,7 @@ export default class Account {
     );
   }
 
-  listActivity<T extends UserEvent | AuthEvent>({
+  async listActivity<T extends UserEvent | AuthEvent>({
     page,
     per_page,
     event,
@@ -272,11 +275,21 @@ export default class Account {
     page?: number | undefined;
     per_page?: number | undefined;
     event?: T | undefined;
-  }): Promise<ReturnValue.UserActivityList<T>> {
-    return this.httpClient.request<ReturnValue.UserActivityList<T>>(
-      "GET",
-      `/client/account/activity?page=${page ?? 1}&per_page=${per_page ?? 50}${event ? `&filter[event]=${event}` : ""}`,
-    );
+  }): Promise<ReturnValue.UserActivityList<Date, T>> {
+    const res = await this.httpClient
+      .request<
+        ReturnValue.UserActivityList<string, T>
+      >("GET", `/client/account/activity?page=${page ?? 1}&per_page=${per_page ?? 50}${event ? `&filter[event]=${event}` : ""}`);
+    return ({
+      ...res,
+      data: res.data.map((activity) => ({
+        ...activity,
+        attributes: {
+          ...activity.attributes,
+          timestamp: new Date(activity.attributes.timestamp),
+        },
+      })),
+    });
   }
 
   async listSshKeys(): Promise<ReturnValue.SshKeysParsed> {
