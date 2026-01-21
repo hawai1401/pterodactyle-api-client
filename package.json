@@ -1,0 +1,17 @@
+{
+  "name": "pterodactyle-api-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "hawai1401",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "dotenv": "^17.2.3"
+  }
+}
