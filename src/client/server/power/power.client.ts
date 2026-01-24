@@ -1,0 +1,46 @@
+import type HttpClient from "../../../class/HttpClient.js";
+import type { PowerArgs } from "./power.types.js";
+
+export default class PowerClient {
+  constructor(private httpClient: HttpClient) {}
+
+  start(id: string) {
+    return this.httpClient.request<void, PowerArgs>(
+      "POST",
+      `/client/servers/${id}/power`,
+      {
+        signal: "start",
+      },
+    );
+  }
+
+  stop(id: string) {
+    return this.httpClient.request<void, PowerArgs>(
+      "POST",
+      `/client/servers/${id}/power`,
+      {
+        signal: "stop",
+      },
+    );
+  }
+
+  restart(id: string) {
+    return this.httpClient.request<void, PowerArgs>(
+      "POST",
+      `/client/servers/${id}/power`,
+      {
+        signal: "restart",
+      },
+    );
+  }
+
+  kill(id: string) {
+    return this.httpClient.request<void, PowerArgs>(
+      "POST",
+      `/client/servers/${id}/power`,
+      {
+        signal: "kill",
+      },
+    );
+  }
+}

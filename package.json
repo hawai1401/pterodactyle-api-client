@@ -24,6 +24,11 @@
       "types": "./dist/client/account/index.d.ts",
       "import": "./dist/client/account/index.js",
       "require": "./dist/client/account/index.cjs"
+    },
+    "./client/server": {
+      "types": "./dist/client/server/index.d.ts",
+      "import": "./dist/client/server/index.js",
+      "require": "./dist/client/server/index.cjs"
     }
   },
   "scripts": {
@@ -50,6 +55,11 @@
   "author": "hawai1401 <hawai1401@ik.me> (https://hawai1401.fr)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.0.9",
+    "@types/ws": "^8.18.1"
+  },
+  "dependencies": {
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
   }
 }
