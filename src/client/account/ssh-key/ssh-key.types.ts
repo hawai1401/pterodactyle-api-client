@@ -1,4 +1,4 @@
-import type { BaseArgs } from "../../../types.js";
+import type { BaseArgs, List } from "../../../types.js";
 
 export interface SshKey<T> {
   object: "ssh_key";
@@ -10,15 +10,13 @@ export interface SshKey<T> {
   };
 }
 
-export type SshKeysRaw = {
-  object: "list";
+export interface SshKeysRaw extends List {
   data: SshKey<string>[];
-};
+}
 
-export type SshKeysParsed = {
-  object: "list";
+export interface SshKeysParsed extends List {
   data: SshKey<Date>[];
-};
+}
 
 export interface CreateSshKeyArgs extends BaseArgs {
   name: string;

@@ -1,4 +1,4 @@
-import type { BaseArgs, IP } from "../../../types.js";
+import type { BaseArgs, IP, List } from "../../../types.js";
 
 export interface ApiKey<L, C = L> {
   object: "api_key";
@@ -11,15 +11,13 @@ export interface ApiKey<L, C = L> {
   };
 }
 
-export type ApiKeysRaw = {
-  object: "list";
+export interface ApiKeysRaw extends List {
   data: ApiKey<string>[];
-};
+}
 
-export type ApiKeysParsed = {
-  object: "list";
+export interface ApiKeysParsed extends List {
   data: ApiKey<Date>[];
-};
+}
 
 export interface CreatedApiKey extends ApiKey<null, string> {
   meta: {

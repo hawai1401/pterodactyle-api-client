@@ -1,3 +1,4 @@
+import type { Tuple } from "../../../types.js";
 import type { EditAcountArgs } from "../account.types.js";
 
 export interface EnableA2fArgs extends EditAcountArgs {
@@ -14,6 +15,6 @@ export interface A2FData {
 export interface RecoveryTokens {
   object: "recovery_tokens";
   attributes: {
-    tokens: [string, string, string, string, string, string, string, string];
+    tokens: Tuple<string, 8>;
   };
 }

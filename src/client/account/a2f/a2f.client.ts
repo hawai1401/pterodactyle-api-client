@@ -5,7 +5,7 @@ import type { A2FData, EnableA2fArgs, RecoveryTokens } from "./a2f.types.js";
 export default class A2fClient {
   constructor(private httpClient: HttpClient) {}
 
-  enable({ password, code }: EnableA2fArgs): Promise<RecoveryTokens> {
+  enable({ password, code }: EnableA2fArgs) {
     return this.httpClient.request<RecoveryTokens, EnableA2fArgs>(
       "POST",
       "/client/account/two-factor",
@@ -13,7 +13,7 @@ export default class A2fClient {
     );
   }
 
-  disable({ password }: EditAcountArgs): Promise<void> {
+  disable({ password }: EditAcountArgs) {
     return this.httpClient.request<void, EditAcountArgs>(
       "POST",
       "/client/account/two-factor/disable",

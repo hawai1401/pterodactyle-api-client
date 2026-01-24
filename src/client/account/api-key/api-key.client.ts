@@ -11,7 +11,7 @@ import type {
 export default class ApiKeyClient {
   constructor(private httpClient: HttpClient) {}
 
-  async list(): Promise<ApiKeysParsed> {
+  async list() {
     const res = await this.httpClient.request<ApiKeysRaw>(
       "GET",
       "/client/account/api-keys",
@@ -29,10 +29,7 @@ export default class ApiKeyClient {
     };
   }
 
-  async create({
-    description,
-    allowed_ips,
-  }: CreateApiKeyArgs): Promise<ReturnedApiKey> {
+  async create({ description, allowed_ips }: CreateApiKeyArgs) {
     const res = await this.httpClient.request<CreatedApiKey, CreateApiKeyArgs>(
       "POST",
       "/client/account/api-keys",
@@ -47,7 +44,7 @@ export default class ApiKeyClient {
     };
   }
 
-  delete({ identifier }: DeleteApiKeyArgs): Promise<void> {
+  delete({ identifier }: DeleteApiKeyArgs) {
     return this.httpClient.request<void>(
       "DELETE",
       `/client/account/api-keys/${identifier}`,

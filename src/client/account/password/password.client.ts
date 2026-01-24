@@ -8,7 +8,7 @@ export default class PasswordClient {
     current_password,
     password,
     password_confirmation,
-  }: EditPasswordArgs): Promise<void> {
+  }: EditPasswordArgs) {
     return this.httpClient.request<void, EditPasswordArgs>(
       "PUT",
       "/client/account/password",

@@ -10,7 +10,7 @@ import type {
 export default class SshKeyClient {
   constructor(private httpClient: HttpClient) {}
 
-  async list(): Promise<SshKeysParsed> {
+  async list() {
     const res = await this.httpClient.request<SshKeysRaw>(
       "GET",
       "/client/account/ssh-keys",
@@ -27,7 +27,7 @@ export default class SshKeyClient {
     };
   }
 
-  async create({ name, public_key }: CreateSshKeyArgs): Promise<SshKey<Date>> {
+  async create({ name, public_key }: CreateSshKeyArgs) {
     const res = await this.httpClient.request<SshKey<string>, CreateSshKeyArgs>(
       "POST",
       "/client/account/ssh-keys",
@@ -45,7 +45,7 @@ export default class SshKeyClient {
     };
   }
 
-  delete({ fingerprint }: DeleteSshKeyArgs): Promise<void> {
+  delete({ fingerprint }: DeleteSshKeyArgs) {
     return this.httpClient.request<void, DeleteSshKeyArgs>(
       "DELETE",
       `/client/account/api-keys/remove`,

@@ -16,7 +16,7 @@ export default class ActivityClient {
     page?: number | undefined;
     per_page?: number | undefined;
     event?: T | undefined;
-  }): Promise<UserActivityList<Date, T>> {
+  } = {}): Promise<UserActivityList<Date, T>> {
     const res = await this.httpClient.request<UserActivityList<string, T>>(
       "GET",
       `/client/account/activity?page=${page ?? 1}&per_page=${per_page ?? 50}${event ? `&filter[event]=${event}` : ""}`,

@@ -1,4 +1,4 @@
-import type { IP } from "../../../types.js";
+import type { IP, ListwithPagination, Pagination } from "../../../types.js";
 
 export interface listActivityArgs {
   page?: number | undefined;
@@ -6,22 +6,34 @@ export interface listActivityArgs {
   event?: UserEvent | AuthEvent | undefined;
 }
 
-export type UserEvent =
-  | "user:api-key.create"
-  | "user:api-key.delete"
-  | "user:ssh-key.create"
-  | "user:ssh-key.delete"
+export type UserApiKeyEvent = "user:api-key.create" | "user:api-key.delete";
+export type UserSshKeyEvent = "user:ssh-key.create" | "user:ssh-key.delete";
+export type UserAccountEvent =
   | "user:account.email-changed"
-  | "user:account.password-changed"
+  | "user:account.password-changed";
+export type UserTwoFactorEvent =
   | "user:two-factor.create"
   | "user:two-factor.delete";
 
+export type UserEvent =
+  | UserApiKeyEvent
+  | UserSshKeyEvent
+  | UserAccountEvent
+  | UserTwoFactorEvent;
+
 export type AuthEvent = "auth:success" | "auth:fail" | "auth:checkpoint";
 
-export interface UserActivityList<U, T extends UserEvent | AuthEvent> {
-  object: "list";
+export interface UserActivityList<
+  U,
+  T extends UserEvent | AuthEvent,
+> extends ListwithPagination {
   data: UserActivityEvent<U, T>[];
 }
+
+type UserActivityProperties<U extends UserEvent | AuthEvent> =
+  (U extends UserApiKeyEvent ? { identifier: string } : {}) &
+    (U extends UserSshKeyEvent ? { fingerprint: string } : {}) &
+    (U extends "user:email-changed" ? { old: string; new: string } : {});
 
 export interface UserActivityEvent<
   T,
@@ -35,20 +47,7 @@ export interface UserActivityEvent<
     is_api: boolean;
     ip: IP;
     description: null;
-    properties: {
-      identifier: U extends "user:api-key.create"
-        ? string
-        : U extends "user:api-key.delete"
-          ? string
-          : undefined;
-      fingerprint: U extends "user:ssh-key.create"
-        ? string
-        : U extends "user:ssh-key.delete"
-          ? string
-          : undefined;
-      old: U extends "user:email-changed" ? string : undefined;
-      new: U extends "user:email-changed" ? string : undefined;
-    };
+    properties: UserActivityProperties<U>;
     has_additional_metadata: boolean;
     timestamp: T;
   };

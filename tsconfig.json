@@ -44,5 +44,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "exclude": ["API", "dist"]
+  "exclude": ["dist", "script"]
 }

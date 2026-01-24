@@ -24,7 +24,7 @@ export default class Account {
     this.sshKey = new SshKeyClient(httpClient);
   }
 
-  info(): Promise<user> {
+  info() {
     return this.httpClient.request<user>("GET", "/client/account");
   }
 }
