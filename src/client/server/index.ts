@@ -1,5 +1,6 @@
 export { default as Server } from "./server.client.js";
 export { default as ActivityClient } from "./activity/activity.client.js";
+export { default as BackupClient } from "./backup/backup.client.js";
 export { default as ConsoleClient } from "./console/console.client.js";
 export { default as DatabaseClient } from "./database/database.client.js";
 export { default as ImageClient } from "./image/image.client.js";
@@ -9,6 +10,7 @@ export { default as StartupClient } from "./startup/startup.client.js";
 
 export * from "./server.types.js";
 export * from "./activity/activity.types.js";
+export * from "./backup/backup.types.js";
 export * from "./console/console.types.js";
 export * from "./database/database.types.js";
 export * from "./image/image.types.js";
