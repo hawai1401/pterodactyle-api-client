@@ -1,0 +1,9 @@
+export default class RessourceClient {
+    httpClient;
+    constructor(httpClient) {
+        this.httpClient = httpClient;
+    }
+    usage(id) {
+        return this.httpClient.request("GET", `/client/servers/${id}`);
+    }
+}
