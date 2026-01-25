@@ -2,7 +2,6 @@ import type {
   BaseArgs,
   IP,
   ListwithPagination,
-  Pagination,
 } from "../../types.js";
 
 export type ServerPermissions =
