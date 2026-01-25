@@ -1,5 +1,5 @@
 import type { BaseArgs, method } from "../types.js";
-import { PterodactyleAPIError } from "./APIError.js";
+import { PterodactylAPIError } from "./APIError.js";
 
 export default class HttpClient {
   constructor(
@@ -27,7 +27,7 @@ export default class HttpClient {
     });
 
     if (!res.ok) {
-      throw new PterodactyleAPIError<U>(
+      throw new PterodactylAPIError<U>(
         res.status,
         await res.text(),
         path,

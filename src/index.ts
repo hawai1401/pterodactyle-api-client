@@ -1,5 +1,5 @@
-export { default as PterodactyleAPIClient } from "./class.js";
-export { PterodactyleAPIError } from "./class/APIError.js";
+export { default as PterodactylAPIClient } from "./class.js";
+export { PterodactylAPIError } from "./class/APIError.js";
 export { default as HttpClient } from "./class/HttpClient.js";
 
 export * from "./types.js";
