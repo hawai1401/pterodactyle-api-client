@@ -1,10 +1,5 @@
-import type {
-  IP,
-  ListwithPagination,
-  Pagination,
-  Tuple,
-} from "../../../types.js";
-import type { ServerPermissions, Signal } from "../server.types.js";
+import type { IP, ListwithPagination, Tuple } from "../../../types.js";
+import type { ServerPermissions, Signal, TaskAction } from "../server.types.js";
 
 export type ServerFileEvent =
   | "server:file.read"
@@ -116,8 +111,6 @@ export interface EmailRevoked {
   email: string;
   revoked: boolean;
 }
-
-export type TaskAction = "command" | "power" | "backup";
 
 export interface TaskPayload<
   T extends TaskAction = TaskAction,

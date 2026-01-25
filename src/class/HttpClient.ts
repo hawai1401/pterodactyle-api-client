@@ -34,7 +34,11 @@ export default class HttpClient {
         body,
       );
     }
-
-    return res.json() as Promise<T>;
+    try {
+      const returnValue = (await res.json()) as Promise<T>;
+      return returnValue;
+    } catch {
+      return void 0 as T;
+    }
   }
 }

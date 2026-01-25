@@ -164,3 +164,5 @@ export interface EditServerArgs extends BaseArgs {
   name: string;
   description?: string | undefined;
 }
+
+export type TaskAction = "command" | "power" | "backup";

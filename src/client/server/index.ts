@@ -6,6 +6,7 @@ export { default as DatabaseClient } from "./database/database.client.js";
 export { default as ImageClient } from "./image/image.client.js";
 export { default as PowerClient } from "./power/power.client.js";
 export { default as RessourceClient } from "./ressource/ressource.client.js";
+export { default as ScheduleClient } from "./schedule/schedule.client.js";
 export { default as StartupClient } from "./startup/startup.client.js";
 
 export * from "./server.types.js";
@@ -16,4 +17,5 @@ export * from "./database/database.types.js";
 export * from "./image/image.types.js";
 export * from "./power/power.types.js";
 export * from "./ressource/ressource.types.js";
+export * from "./schedule/schedule.types.js";
 export * from "./startup/startup.types.js";

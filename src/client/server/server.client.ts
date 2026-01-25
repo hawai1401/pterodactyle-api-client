@@ -2,6 +2,7 @@ import type HttpClient from "../../class/HttpClient.js";
 import ActivityClient from "./activity/activity.client.js";
 import ConsoleClient from "./console/console.client.js";
 import ImageClient from "./image/image.client.js";
+import { DatabaseClient, ScheduleClient } from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
 import type { EditServerArgs, ServerList } from "./server.types.js";
@@ -11,9 +12,11 @@ import { z } from "zod";
 export default class Servers {
   public activity: ActivityClient;
   public console: ConsoleClient;
+  public database: DatabaseClient;
   public image: ImageClient;
   public ressource: RessourceClient;
   public power: PowerClient;
+  public schedule: ScheduleClient;
   public startup: StartupClient;
 
   constructor(
@@ -22,9 +25,11 @@ export default class Servers {
   ) {
     this.activity = new ActivityClient(httpClient);
     this.console = new ConsoleClient(httpClient, panelUrl);
+    this.database = new DatabaseClient(httpClient);
     this.image = new ImageClient(httpClient);
     this.ressource = new RessourceClient(httpClient);
     this.power = new PowerClient(httpClient);
+    this.schedule = new ScheduleClient(httpClient);
     this.startup = new StartupClient(httpClient);
   }
 
