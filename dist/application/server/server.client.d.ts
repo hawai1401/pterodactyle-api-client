@@ -1,8 +1,10 @@
 import type HttpClient from "../../class/HttpClient.js";
 import type { UserServer, UserServerAttributesWithDate } from "../../client/server/server.types.js";
+import DatabaseClient from "./database/database.client.js";
 import type { CreateServerArgs, EditApplicationServerArgs } from "./server.types.js";
 export default class ServerClient {
     private httpClient;
+    database: DatabaseClient;
     constructor(httpClient: HttpClient);
     list(): Promise<{
         data: {

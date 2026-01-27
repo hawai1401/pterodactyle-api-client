@@ -3,6 +3,7 @@ import type {
   UserServer,
   UserServerAttributesWithDate,
 } from "../../client/server/server.types.js";
+import DatabaseClient from "./database/database.client.js";
 import type {
   ApplicationServerList,
   CreateServerArgs,
@@ -13,7 +14,11 @@ import type {
 } from "./server.types.js";
 
 export default class ServerClient {
-  constructor(private httpClient: HttpClient) {}
+  public database: DatabaseClient;
+
+  constructor(private httpClient: HttpClient) {
+    this.database = new DatabaseClient(httpClient);
+  }
 
   async list() {
     const res = await this.httpClient.request<ApplicationServerList>(

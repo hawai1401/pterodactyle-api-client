@@ -1,7 +1,10 @@
+import DatabaseClient from "./database/database.client.js";
 export default class ServerClient {
     httpClient;
+    database;
     constructor(httpClient) {
         this.httpClient = httpClient;
+        this.database = new DatabaseClient(httpClient);
     }
     async list() {
         const res = await this.httpClient.request("GET", "/application/servers");
