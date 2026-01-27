@@ -34,6 +34,16 @@
       "types": "./dist/application/index.d.ts",
       "import": "./dist/application/index.js",
       "require": "./dist/application/index.cjs"
+    },
+    "./application/user": {
+      "types": "./dist/application/user/index.d.ts",
+      "import": "./dist/application/user/index.js",
+      "require": "./dist/application/user/index.cjs"
+    },
+    "./application/server": {
+      "types": "./dist/application/server/index.d.ts",
+      "import": "./dist/application/server/index.js",
+      "require": "./dist/application/server/index.cjs"
     }
   },
   "scripts": {

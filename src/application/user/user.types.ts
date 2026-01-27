@@ -51,7 +51,3 @@ export interface CreateUserArgs extends BaseArgs {
   root_admin?: boolean | undefined;
   external_id?: string | undefined;
 }
-
-export interface EditUserArgs extends BaseArgs {
-  
-}

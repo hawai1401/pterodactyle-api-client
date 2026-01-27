@@ -1,8 +1,6 @@
 export type method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export interface BaseArgs {
-  [key: string]: string | string[] | number | boolean | undefined;
-}
+export type BaseArgs = Record<string, any>;
 
 export type IP = `${number}.${number}.${number}.${number}`;
 
@@ -34,3 +32,5 @@ export interface ListwithPagination extends List {
     pagination: Pagination;
   };
 }
+
+export type EnvironmentVariable = Uppercase<string>;
