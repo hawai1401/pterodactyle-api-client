@@ -1,4 +1,5 @@
 import LocationClient from "./location/location.client.js";
+import NestClient from "./nest/nest.client.js";
 import NodeClient from "./node/node.client.js";
 import ServerClient from "./server/server.client.js";
 import UserClient from "./user/user.client.js";
@@ -9,6 +10,7 @@ export default class ApplicationAPI {
     server: ServerClient;
     location: LocationClient;
     node: NodeClient;
+    nest: NestClient;
     constructor({ apiKey, panelUrl }: {
         apiKey: string;
         panelUrl: URL;

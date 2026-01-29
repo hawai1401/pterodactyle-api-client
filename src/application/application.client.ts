@@ -1,5 +1,6 @@
 import HttpClient from "../class/HttpClient.js";
 import LocationClient from "./location/location.client.js";
+import NestClient from "./nest/nest.client.js";
 import NodeClient from "./node/node.client.js";
 import ServerClient from "./server/server.client.js";
 import UserClient from "./user/user.client.js";
@@ -11,6 +12,7 @@ export default class ApplicationAPI {
   public server: ServerClient;
   public location: LocationClient;
   public node: NodeClient;
+  public nest: NestClient;
 
   constructor({ apiKey, panelUrl }: { apiKey: string; panelUrl: URL }) {
     this.panelUrl = panelUrl;
@@ -19,5 +21,6 @@ export default class ApplicationAPI {
     this.server = new ServerClient(this.httpClient);
     this.location = new LocationClient(this.httpClient);
     this.node = new NodeClient(this.httpClient);
+    this.nest = new NestClient(this.httpClient);
   }
 }
