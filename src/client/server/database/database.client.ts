@@ -3,7 +3,6 @@ import type HttpClient from "../../../class/HttpClient.js";
 import type {
   CreateDatabaseArgs,
   DatabaseList,
-  DatabaseAttributesWithPassword,
   DatabaseWithPassword,
 } from "./database.types.js";
 import PasswordClient from "./password/password.client.js";

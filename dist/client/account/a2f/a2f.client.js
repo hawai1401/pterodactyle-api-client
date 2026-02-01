@@ -1,15 +1,17 @@
+import z from "zod";
+import { a2fSchema, passwordSchema } from "../account.schemas.js";
 export default class A2fClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
-    enable({ password, code }) {
-        return this.httpClient.request("POST", "/client/account/two-factor", { password, code });
+    enable(options) {
+        return this.httpClient.request("POST", "/client/account/two-factor", a2fSchema.parse(options));
     }
-    disable({ password }) {
-        return this.httpClient.request("POST", "/client/account/two-factor/disable", { password });
+    disable(options) {
+        return this.httpClient.request("POST", "/client/account/two-factor/disable", passwordSchema.parse(options));
     }
-    getA2fQrCode() {
+    qrCode() {
         return this.httpClient.request("GET", "/client/account/two-factor");
     }
 }

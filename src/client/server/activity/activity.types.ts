@@ -245,7 +245,7 @@ export type ServerActivityMap = {
 };
 
 export type ServerActivityProperties<U extends ServerEvent> =
-  U extends keyof ServerActivityMap ? ServerActivityMap[U] : {};
+  U extends keyof ServerActivityMap ? ServerActivityMap[U] : never;
 
 export interface ActivityLog<
   T extends string | Date,

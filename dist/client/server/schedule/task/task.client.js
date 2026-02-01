@@ -3,7 +3,6 @@ export default class TaskClient {
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
-    list(id, schedule) { }
     async create(id, schedule, { action, continue_on_failure, payload, time_offset, }) {
         const res = await this.httpClient.request("POST", `/client/servers/${id}/schedules/${schedule}/tasks`, {
             action,

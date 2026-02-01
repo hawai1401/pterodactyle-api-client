@@ -1,5 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateDatabaseArgs, DatabaseList, DatabaseAttributesWithPassword } from "./database.types.js";
+import type { CreateDatabaseArgs, DatabaseList } from "./database.types.js";
 import PasswordClient from "./password/password.client.js";
 export default class DatabaseClient {
     private httpClient;
@@ -9,7 +9,7 @@ export default class DatabaseClient {
     create(id: string, args: CreateDatabaseArgs): Promise<{
         password: string;
         object: "server_database";
-        attributes: DatabaseAttributesWithPassword;
+        attributes: import("./database.types.js").DatabaseAttributesWithPassword;
     }>;
     delete(id: string, database: string): Promise<void>;
 }

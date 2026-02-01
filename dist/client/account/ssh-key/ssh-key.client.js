@@ -1,3 +1,4 @@
+import { createSshKeySchema, deleteSshKeySchema } from "../account.schemas.js";
 export default class SshKeyClient {
     httpClient;
     constructor(httpClient) {
@@ -16,11 +17,8 @@ export default class SshKeyClient {
             })),
         };
     }
-    async create({ name, public_key }) {
-        const res = await this.httpClient.request("POST", "/client/account/ssh-keys", {
-            name,
-            public_key,
-        });
+    async create(options) {
+        const res = await this.httpClient.request("POST", "/client/account/ssh-keys", createSshKeySchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -29,7 +27,7 @@ export default class SshKeyClient {
             },
         };
     }
-    delete({ fingerprint }) {
-        return this.httpClient.request("DELETE", `/client/account/api-keys/remove`, { fingerprint });
+    delete(options) {
+        return this.httpClient.request("POST", `/client/account/ssh-keys/remove`, deleteSshKeySchema.parse(options));
     }
 }

@@ -2,7 +2,6 @@ import type HttpClient from "../../../class/HttpClient.js";
 import type {
   ApplicationDatabase,
   ApplicationDatabaseList,
-  ApplicationDatabaseWithPassword,
   CreateApplicationDatabase,
   CreatedApplicationDatabase,
 } from "./database.types.js";

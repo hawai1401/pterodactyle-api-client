@@ -6,8 +6,6 @@ import type { CreateScheduleTaskArgs } from "./task.types.js";
 export default class TaskClient {
   constructor(private httpClient: HttpClient) {}
 
-  list(id: string, schedule: number) {}
-
   async create<T extends TaskAction>(
     id: string,
     schedule: number,

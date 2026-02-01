@@ -15,12 +15,12 @@ export interface UserActivityList<U, T extends UserEvent | AuthEvent> extends Li
 }
 type UserActivityProperties<U extends UserEvent | AuthEvent> = (U extends UserApiKeyEvent ? {
     identifier: string;
-} : {}) & (U extends UserSshKeyEvent ? {
+} : never) & (U extends UserSshKeyEvent ? {
     fingerprint: string;
-} : {}) & (U extends "user:email-changed" ? {
+} : never) & (U extends "user:email-changed" ? {
     old: string;
     new: string;
-} : {});
+} : never);
 export interface UserActivityEvent<T, U extends UserEvent | AuthEvent = UserEvent | AuthEvent> {
     object: "activity_log";
     attributes: {

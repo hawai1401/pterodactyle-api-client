@@ -1,6 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
 import type {
-  ApplicationAllocation,
   ApplicationAllocationList,
   ApplicationAllocationListWithDate,
   CreateApplicationAllocationArgs,
@@ -24,7 +23,7 @@ export default class AllocationClient {
   }
 
   delete(id: number, allocation: number) {
-    return this.httpClient.request<ApplicationAllocationList, {}>(
+    return this.httpClient.request<void>(
       "DELETE",
       `/application/nodes/${id}/allocations/${allocation}`,
     );

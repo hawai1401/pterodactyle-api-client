@@ -1,3 +1,4 @@
+import { createApiKeySchema, deleteApiKeySchema } from "../account.schemas.js";
 export default class ApiKeyClient {
     httpClient;
     constructor(httpClient) {
@@ -17,17 +18,15 @@ export default class ApiKeyClient {
             })),
         };
     }
-    async create({ description, allowed_ips }) {
-        const res = await this.httpClient.request("POST", "/client/account/api-keys", {
-            description,
-            allowed_ips,
-        });
+    async create(options) {
+        const res = await this.httpClient.request("POST", "/client/account/api-keys", createApiKeySchema.parse(options));
         return {
             ...res,
             api_key: `${res.attributes.identifier}${res.meta.secret_token}`,
         };
     }
-    delete({ identifier }) {
+    delete(options) {
+        const { identifier } = deleteApiKeySchema.parse(options);
         return this.httpClient.request("DELETE", `/client/account/api-keys/${identifier}`);
     }
 }

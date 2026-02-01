@@ -1,11 +1,11 @@
+import type z from "zod";
 import type HttpClient from "../../../class/HttpClient.js";
+import { createApiKeySchema, deleteApiKeySchema } from "../account.schemas.js";
 import type {
-  ApiKeysParsed,
   ApiKeysRaw,
   CreateApiKeyArgs,
   CreatedApiKey,
   DeleteApiKeyArgs,
-  ReturnedApiKey,
 } from "./api-key.types.js";
 
 export default class ApiKeyClient {
@@ -29,22 +29,19 @@ export default class ApiKeyClient {
     };
   }
 
-  async create({ description, allowed_ips }: CreateApiKeyArgs) {
-    const res = await this.httpClient.request<CreatedApiKey, CreateApiKeyArgs>(
-      "POST",
-      "/client/account/api-keys",
-      {
-        description,
-        allowed_ips,
-      },
-    );
+  async create(options: CreateApiKeyArgs) {
+    const res = await this.httpClient.request<
+      CreatedApiKey,
+      z.infer<typeof createApiKeySchema>
+    >("POST", "/client/account/api-keys", createApiKeySchema.parse(options));
     return {
       ...res,
       api_key: `${res.attributes.identifier}${res.meta.secret_token}`,
     };
   }
 
-  delete({ identifier }: DeleteApiKeyArgs) {
+  delete(options: DeleteApiKeyArgs) {
+    const { identifier } = deleteApiKeySchema.parse(options);
     return this.httpClient.request<void>(
       "DELETE",
       `/client/account/api-keys/${identifier}`,

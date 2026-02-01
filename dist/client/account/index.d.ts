@@ -12,4 +12,5 @@ export * from "./api-key/api-key.types.js";
 export * from "./email/email.types.js";
 export * from "./password/password.types.js";
 export * from "./ssh-key/ssh-key.types.js";
+export * from "./account.schemas.js";
 //# sourceMappingURL=index.d.ts.map

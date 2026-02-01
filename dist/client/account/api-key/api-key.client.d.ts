@@ -16,7 +16,7 @@ export default class ApiKeyClient {
         }[];
         object: "list";
     }>;
-    create({ description, allowed_ips }: CreateApiKeyArgs): Promise<{
+    create(options: CreateApiKeyArgs): Promise<{
         api_key: string;
         meta: {
             secret_token: string;
@@ -30,6 +30,6 @@ export default class ApiKeyClient {
             created_at: string;
         };
     }>;
-    delete({ identifier }: DeleteApiKeyArgs): Promise<void>;
+    delete(options: DeleteApiKeyArgs): Promise<void>;
 }
 //# sourceMappingURL=api-key.client.d.ts.map

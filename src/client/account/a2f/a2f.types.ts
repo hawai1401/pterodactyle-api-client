@@ -2,7 +2,7 @@ import type { Tuple } from "../../../types.js";
 import type { EditAcountArgs } from "../account.types.js";
 
 export interface EnableA2fArgs extends EditAcountArgs {
-  code: string;
+  code: string | number;
 }
 
 export interface A2FData {

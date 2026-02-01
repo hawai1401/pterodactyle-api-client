@@ -1,4 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
+import { accountActivityPaginationSchema } from "../account.schemas.js";
 import type {
   AuthEvent,
   UserActivityList,
@@ -17,9 +18,14 @@ export default class ActivityClient {
     per_page?: number | undefined;
     event?: T | undefined;
   } = {}): Promise<UserActivityList<Date, T>> {
+    const parsedValues = accountActivityPaginationSchema.parse({
+      page,
+      per_page,
+      event,
+    });
     const res = await this.httpClient.request<UserActivityList<string, T>>(
       "GET",
-      `/client/account/activity?page=${page ?? 1}&per_page=${per_page ?? 50}${event ? `&filter[event]=${event}` : ""}`,
+      `/client/account/activity?page=${parsedValues.page ?? 1}&per_page=${parsedValues.per_page ?? 50}${parsedValues.event ? `&filter[event]=${parsedValues.event}` : ""}`,
     );
     return {
       ...res,

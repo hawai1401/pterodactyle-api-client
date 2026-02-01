@@ -1,9 +1,10 @@
+import type z from "zod";
 import type HttpClient from "../../../class/HttpClient.js";
+import { createSshKeySchema, deleteSshKeySchema } from "../account.schemas.js";
 import type {
   CreateSshKeyArgs,
   DeleteSshKeyArgs,
   SshKey,
-  SshKeysParsed,
   SshKeysRaw,
 } from "./ssh-key.types.js";
 
@@ -27,15 +28,11 @@ export default class SshKeyClient {
     };
   }
 
-  async create({ name, public_key }: CreateSshKeyArgs) {
-    const res = await this.httpClient.request<SshKey<string>, CreateSshKeyArgs>(
-      "POST",
-      "/client/account/ssh-keys",
-      {
-        name,
-        public_key,
-      },
-    );
+  async create(options: CreateSshKeyArgs) {
+    const res = await this.httpClient.request<
+      SshKey<string>,
+      z.infer<typeof createSshKeySchema>
+    >("POST", "/client/account/ssh-keys", createSshKeySchema.parse(options));
     return {
       ...res,
       attributes: {
@@ -45,11 +42,11 @@ export default class SshKeyClient {
     };
   }
 
-  delete({ fingerprint }: DeleteSshKeyArgs) {
-    return this.httpClient.request<void, DeleteSshKeyArgs>(
-      "DELETE",
-      `/client/account/api-keys/remove`,
-      { fingerprint },
+  delete(options: DeleteSshKeyArgs) {
+    return this.httpClient.request<void, z.infer<typeof deleteSshKeySchema>>(
+      "POST",
+      `/client/account/ssh-keys/remove`,
+      deleteSshKeySchema.parse(options),
     );
   }
 }

@@ -1,4 +1,4 @@
-import type { IP, ListwithPagination, Pagination } from "../../../types.js";
+import type { IP, ListwithPagination } from "../../../types.js";
 
 export interface listActivityArgs {
   page?: number | undefined;
@@ -31,9 +31,9 @@ export interface UserActivityList<
 }
 
 type UserActivityProperties<U extends UserEvent | AuthEvent> =
-  (U extends UserApiKeyEvent ? { identifier: string } : {}) &
-    (U extends UserSshKeyEvent ? { fingerprint: string } : {}) &
-    (U extends "user:email-changed" ? { old: string; new: string } : {});
+  (U extends UserApiKeyEvent ? { identifier: string } : never) &
+    (U extends UserSshKeyEvent ? { fingerprint: string } : never) &
+    (U extends "user:email-changed" ? { old: string; new: string } : never);
 
 export interface UserActivityEvent<
   T,

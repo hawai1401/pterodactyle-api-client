@@ -5,6 +5,6 @@ export default class AllocationClient {
     constructor(httpClient: HttpClient);
     list(id: number): Promise<ApplicationAllocationListWithDate>;
     create(id: number, options: CreateApplicationAllocationArgs): Promise<ApplicationAllocationList>;
-    delete(id: number, allocation: number): Promise<ApplicationAllocationList>;
+    delete(id: number, allocation: number): Promise<void>;
 }
 //# sourceMappingURL=allocation.client.d.ts.map

@@ -52,7 +52,8 @@
     }
   },
   "scripts": {
-    "build": "tsc && node script/postbuild.js"
+    "build": "tsc && node script/postbuild.js",
+    "lint": "eslint --fix"
   },
   "keywords": [
     "pterodactyl",
@@ -75,10 +76,15 @@
   "author": "hawai1401 <hawai1401@ik.me> (https://hawai1401.fr)",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.9",
-    "@types/ws": "^8.18.1"
+    "@types/ws": "^8.18.1",
+    "eslint": "^9.39.2",
+    "globals": "^17.3.0",
+    "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
+    "jiti": "^2.6.1",
     "ws": "^8.19.0",
     "zod": "^4.3.6"
   }

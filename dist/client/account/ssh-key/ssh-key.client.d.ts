@@ -15,7 +15,7 @@ export default class SshKeyClient {
         }[];
         object: "list";
     }>;
-    create({ name, public_key }: CreateSshKeyArgs): Promise<{
+    create(options: CreateSshKeyArgs): Promise<{
         attributes: {
             created_at: Date;
             name: string;
@@ -24,6 +24,6 @@ export default class SshKeyClient {
         };
         object: "ssh_key";
     }>;
-    delete({ fingerprint }: DeleteSshKeyArgs): Promise<void>;
+    delete(options: DeleteSshKeyArgs): Promise<void>;
 }
 //# sourceMappingURL=ssh-key.client.d.ts.map

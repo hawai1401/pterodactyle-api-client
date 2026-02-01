@@ -129,7 +129,7 @@ export type ServerActivityMap = {
     };
     "server:backup.restore-complete": NameOnly;
 };
-export type ServerActivityProperties<U extends ServerEvent> = U extends keyof ServerActivityMap ? ServerActivityMap[U] : {};
+export type ServerActivityProperties<U extends ServerEvent> = U extends keyof ServerActivityMap ? ServerActivityMap[U] : never;
 export interface ActivityLog<T extends string | Date, U extends ServerEvent = ServerEvent> {
     object: "activity_log";
     attributes: {
