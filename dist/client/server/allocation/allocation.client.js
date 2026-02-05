@@ -1,4 +1,5 @@
 import { allocationId, assignAllocationSchema, editAllocationSchema, userServerId, } from "../server.schemas.js";
+import z from "zod";
 export default class AllocationClient {
     httpClient;
     constructor(httpClient) {
@@ -8,8 +9,7 @@ export default class AllocationClient {
         return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/network/allocations`);
     }
     assign(id, options) {
-        const parsedValues = assignAllocationSchema.parse(options);
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations`, { ip: parsedValues.ip, port: parsedValues.port });
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations`, assignAllocationSchema.parse(options));
     }
     setPrimary(id, allocation) {
         return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}/primary`);

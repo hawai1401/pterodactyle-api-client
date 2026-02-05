@@ -1,5 +1,10 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
+import {
+  createLocationSchema,
+  editLocationSchema,
+  locationId,
+} from "./location.schemas.js";
 import type {
   CreateLocationArgs,
   EditLocationArgs,
@@ -31,10 +36,9 @@ export default class LocationClient {
   async info(id: number) {
     const res = await this.httpClient.request<Location<string>>(
       "GET",
-      `/application/locations/${id}`,
+      `/application/locations/${locationId.parse(id)}`,
     );
     return {
-      ...res,
       ...res,
       attributes: {
         ...res.attributes,
@@ -45,16 +49,11 @@ export default class LocationClient {
   }
 
   async create(options: CreateLocationArgs) {
-    const schema = z.object({
-      short: z.string().min(3).max(60),
-      long: z.string().min(3).max(191),
-    });
     const res = await this.httpClient.request<
       Location<string>,
-      CreateLocationArgs
-    >("POST", `/application/locations`, schema.parse(options));
+      z.infer<typeof createLocationSchema>
+    >("POST", `/application/locations`, createLocationSchema.parse(options));
     return {
-      ...res,
       ...res,
       attributes: {
         ...res.attributes,
@@ -65,21 +64,15 @@ export default class LocationClient {
   }
 
   async edit(id: number, options: EditLocationArgs) {
-    const schema = z
-      .object({
-        short: z.string().min(3).max(60).optional(),
-        long: z.string().min(3).max(191).optional(),
-      })
-      .refine((data) => data.short || data.long, {
-        message: "Either short or long must be provided",
-        path: ["short"],
-      });
     const res = await this.httpClient.request<
       Location<string>,
-      EditLocationArgs
-    >("PATCH", `/application/locations/${id}`, schema.parse(options));
+      z.infer<typeof editLocationSchema>
+    >(
+      "PATCH",
+      `/application/locations/${locationId.parse(id)}`,
+      editLocationSchema.parse(options),
+    );
     return {
-      ...res,
       ...res,
       attributes: {
         ...res.attributes,
@@ -91,8 +84,8 @@ export default class LocationClient {
 
   delete(id: number) {
     return this.httpClient.request<void>(
-      "POST",
-      `/application/locations/${id}`,
+      "DELETE",
+      `/application/locations/${locationId.parse(id)}`,
     );
   }
 }

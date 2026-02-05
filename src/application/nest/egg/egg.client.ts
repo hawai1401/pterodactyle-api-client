@@ -1,4 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
+import { nestEggId, nestId } from "../nest.schemas.js";
 import type { Egg, EggList } from "./egg.types.js";
 
 export default class EggClient {
@@ -7,7 +8,7 @@ export default class EggClient {
   async list(id: number) {
     const res = await this.httpClient.request<EggList>(
       "GET",
-      `/application/nests/${id}/eggs`,
+      `/application/nests/${nestId.parse(id)}/eggs`,
     );
     return {
       ...res,
@@ -22,7 +23,7 @@ export default class EggClient {
   async info(id: number, egg: number) {
     const res = await this.httpClient.request<Egg<string>>(
       "GET",
-      `/application/nests/${id}/eggs/${egg}`,
+      `/application/nests/${nestId.parse(id)}/eggs/${nestEggId.parse(egg)}`,
     );
     return {
       ...res,

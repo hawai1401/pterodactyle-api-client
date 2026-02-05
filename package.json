@@ -49,6 +49,16 @@
       "types": "./dist/application/node/index.d.ts",
       "import": "./dist/application/node/index.js",
       "require": "./dist/application/node/index.cjs"
+    },
+    "./application/server": {
+      "types": "./dist/application/server/index.d.ts",
+      "import": "./dist/application/server/index.js",
+      "require": "./dist/application/server/index.cjs"
+    },
+    "./application/nest": {
+      "types": "./dist/application/nest/index.d.ts",
+      "import": "./dist/application/nest/index.js",
+      "require": "./dist/application/nest/index.cjs"
     }
   },
   "scripts": {

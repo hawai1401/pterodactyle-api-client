@@ -1,5 +1,7 @@
+import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
 import AllocationClient from "./allocation/allocation.client.js";
+import { createNodeSchema, nodeId } from "./node.schemas.js";
 import type {
   CreateNodeArgs,
   Node,
@@ -35,7 +37,7 @@ export default class NodeClient {
   async info(id: number) {
     const res = await this.httpClient.request<Node<string>>(
       "GET",
-      `/application/nodes/${id}`,
+      `/application/nodes/${nodeId.parse(id)}`,
     );
     return {
       ...res,
@@ -48,11 +50,10 @@ export default class NodeClient {
   }
 
   async create(options: CreateNodeArgs) {
-    const res = await this.httpClient.request<Node<string>, CreateNodeArgs>(
-      "POST",
-      "/application/nodes",
-      options,
-    );
+    const res = await this.httpClient.request<
+      Node<string>,
+      z.infer<typeof createNodeSchema>
+    >("POST", "/application/nodes", createNodeSchema.parse(options));
     return {
       ...res,
       attributes: {
@@ -64,10 +65,13 @@ export default class NodeClient {
   }
 
   async edit(id: number, options: CreateNodeArgs) {
-    const res = await this.httpClient.request<Node<string>, CreateNodeArgs>(
+    const res = await this.httpClient.request<
+      Node<string>,
+      z.infer<typeof createNodeSchema>
+    >(
       "PATCH",
-      `/application/nodes/${id}`,
-      options,
+      `/application/nodes/${nodeId.parse(id)}`,
+      createNodeSchema.parse(options),
     );
     return {
       ...res,
@@ -80,16 +84,16 @@ export default class NodeClient {
   }
 
   configuration(id: number) {
-    return this.httpClient.request<NodeConfiguration, CreateNodeArgs>(
+    return this.httpClient.request<NodeConfiguration>(
       "GET",
-      `/application/nodes/${id}/configuration`,
+      `/application/nodes/${nodeId.parse(id)}/configuration`,
     );
   }
 
   delete(id: number) {
-    return this.httpClient.request<NodeConfiguration, CreateNodeArgs>(
+    return this.httpClient.request<NodeConfiguration>(
       "DELETE",
-      `/application/nodes/${id}`,
+      `/application/nodes/${nodeId.parse(id)}`,
     );
   }
 }

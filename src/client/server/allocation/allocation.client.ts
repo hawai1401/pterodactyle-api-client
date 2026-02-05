@@ -11,7 +11,7 @@ import {
   editAllocationSchema,
   userServerId,
 } from "../server.schemas.js";
-import type { IP } from "../../../types.js";
+import z from "zod";
 
 export default class AllocationClient {
   constructor(private httpClient: HttpClient) {}
@@ -24,11 +24,13 @@ export default class AllocationClient {
   }
 
   assign(id: string, options: AssignAllocationArgs) {
-    const parsedValues = assignAllocationSchema.parse(options);
-    return this.httpClient.request<Allocation, AssignAllocationArgs>(
+    return this.httpClient.request<
+      Allocation,
+      z.infer<typeof assignAllocationSchema>
+    >(
       "POST",
       `/client/servers/${userServerId.parse(id)}/network/allocations`,
-      { ip: parsedValues.ip as IP, port: parsedValues.port },
+      assignAllocationSchema.parse(options),
     );
   }
 

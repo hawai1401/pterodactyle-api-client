@@ -1,3 +1,4 @@
+import { nestId } from "./nest.schemas.js";
 export default class NestClient {
     httpClient;
     constructor(httpClient) {
@@ -18,7 +19,7 @@ export default class NestClient {
         };
     }
     async info(id) {
-        const res = await this.httpClient.request("GET", `/application/nests/${id}`);
+        const res = await this.httpClient.request("GET", `/application/nests/${nestId.parse(id)}`);
         return {
             ...res,
             attributes: {

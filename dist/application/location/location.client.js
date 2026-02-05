@@ -1,4 +1,5 @@
 import z from "zod";
+import { createLocationSchema, editLocationSchema, locationId, } from "./location.schemas.js";
 export default class LocationClient {
     httpClient;
     constructor(httpClient) {
@@ -19,9 +20,8 @@ export default class LocationClient {
         };
     }
     async info(id) {
-        const res = await this.httpClient.request("GET", `/application/locations/${id}`);
+        const res = await this.httpClient.request("GET", `/application/locations/${locationId.parse(id)}`);
         return {
-            ...res,
             ...res,
             attributes: {
                 ...res.attributes,
@@ -31,13 +31,8 @@ export default class LocationClient {
         };
     }
     async create(options) {
-        const schema = z.object({
-            short: z.string().min(3).max(60),
-            long: z.string().min(3).max(191),
-        });
-        const res = await this.httpClient.request("POST", `/application/locations`, schema.parse(options));
+        const res = await this.httpClient.request("POST", `/application/locations`, createLocationSchema.parse(options));
         return {
-            ...res,
             ...res,
             attributes: {
                 ...res.attributes,
@@ -47,18 +42,8 @@ export default class LocationClient {
         };
     }
     async edit(id, options) {
-        const schema = z
-            .object({
-            short: z.string().min(3).max(60).optional(),
-            long: z.string().min(3).max(191).optional(),
-        })
-            .refine((data) => data.short || data.long, {
-            message: "Either short or long must be provided",
-            path: ["short"],
-        });
-        const res = await this.httpClient.request("PATCH", `/application/locations/${id}`, schema.parse(options));
+        const res = await this.httpClient.request("PATCH", `/application/locations/${locationId.parse(id)}`, editLocationSchema.parse(options));
         return {
-            ...res,
             ...res,
             attributes: {
                 ...res.attributes,
@@ -68,6 +53,6 @@ export default class LocationClient {
         };
     }
     delete(id) {
-        return this.httpClient.request("POST", `/application/locations/${id}`);
+        return this.httpClient.request("DELETE", `/application/locations/${locationId.parse(id)}`);
     }
 }

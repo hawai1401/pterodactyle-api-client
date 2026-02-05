@@ -1,4 +1,5 @@
 import type HttpClient from "../../class/HttpClient.js";
+import { nestId } from "./nest.schemas.js";
 import type { Nest, NestList } from "./nest.types.js";
 
 export default class NestClient {
@@ -25,7 +26,7 @@ export default class NestClient {
   async info(id: number) {
     const res = await this.httpClient.request<Nest<string>>(
       "GET",
-      `/application/nests/${id}`,
+      `/application/nests/${nestId.parse(id)}`,
     );
     return {
       ...res,
