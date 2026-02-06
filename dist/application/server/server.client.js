@@ -1,4 +1,6 @@
+import z from "zod";
 import DatabaseClient from "./database/database.client.js";
+import { applicationServerExternalId, applicationServerId, createApplicationDatabaseSchema, createServerSchema, editApplicationServerConfigurationSchema, editApplicationServerDetailsSchema, editApplicationServerStartupSchema, } from "./server.schemas.js";
 export default class ServerClient {
     httpClient;
     database;
@@ -19,7 +21,7 @@ export default class ServerClient {
     }
     async info({ id, external_id, }) {
         if (id) {
-            const res = await this.httpClient.request("GET", `/application/servers/${id}`);
+            const res = await this.httpClient.request("GET", `/application/servers/${applicationServerId.parse(id)}`);
             return {
                 ...res,
                 attributes: {
@@ -30,7 +32,7 @@ export default class ServerClient {
             };
         }
         else if (external_id) {
-            const res = await this.httpClient.request("GET", `/application/servers/external/${external_id}`);
+            const res = await this.httpClient.request("GET", `/application/servers/external/${applicationServerExternalId.parse(external_id)}`);
             return {
                 ...res,
                 attributes: {
@@ -41,10 +43,10 @@ export default class ServerClient {
             };
         }
         else
-            throw new Error("Vous devez spécifier au moins un des 2 paramètres de recherche d'un utilisateur !");
+            throw new Error("Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !");
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/application/servers`, options);
+        const res = await this.httpClient.request("POST", `/application/servers`, createServerSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -55,14 +57,14 @@ export default class ServerClient {
         };
     }
     async edit(server, { details, configuration, startup }) {
-        const basePath = `/application/servers/${server}`;
+        const basePath = `/application/servers/${applicationServerId.parse(server)}`;
         const requests = [];
         if (details)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/details`, details));
+            requests.push(this.httpClient.request("PATCH", `${basePath}/details`, editApplicationServerDetailsSchema.parse(details)));
         if (configuration)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/build`, configuration));
+            requests.push(this.httpClient.request("PATCH", `${basePath}/build`, editApplicationServerConfigurationSchema.parse(configuration)));
         if (startup)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/startup`, startup));
+            requests.push(this.httpClient.request("PATCH", `${basePath}/startup`, editApplicationServerStartupSchema.parse(startup)));
         if (requests.length === 0)
             throw new Error("Aucunes modifications spécifiées !");
         const res = await Promise.all(requests);
@@ -76,15 +78,15 @@ export default class ServerClient {
         };
     }
     suspend(id) {
-        return this.httpClient.request("POST", `/application/servers/${id}/suspend`);
+        return this.httpClient.request("POST", `/application/servers/${applicationServerId.parse(id)}/suspend`);
     }
     unsuspend(id) {
-        return this.httpClient.request("POST", `/application/servers/${id}/unsuspend`);
+        return this.httpClient.request("POST", `/application/servers/${applicationServerId.parse(id)}/unsuspend`);
     }
     reinstall(id) {
-        return this.httpClient.request("POST", `/application/servers/${id}/reinstall`);
+        return this.httpClient.request("POST", `/application/servers/${applicationServerId.parse(id)}/reinstall`);
     }
     delete(id, force) {
-        return this.httpClient.request("DELETE", `/application/servers/${id}${force ? "?force=true" : ""}`);
+        return this.httpClient.request("DELETE", `/application/servers/${applicationServerId.parse(id)}${force ? "?force=true" : ""}`);
     }
 }

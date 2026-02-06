@@ -1,3 +1,5 @@
+import z from "zod";
+import { applicationServerDatabaseId, applicationServerId, createApplicationDatabaseSchema } from "../server.schemas.js";
 import PasswordClient from "./password/password.client.js";
 export default class DatabaseClient {
     httpClient;
@@ -7,7 +9,7 @@ export default class DatabaseClient {
         this.password = new PasswordClient(httpClient);
     }
     async list(server) {
-        const res = await this.httpClient.request("GET", `/application/servers/${server}/databases`);
+        const res = await this.httpClient.request("GET", `/application/servers/${applicationServerId.parse(server)}/databases`);
         return {
             ...res,
             data: res.data.map((db) => ({
@@ -21,7 +23,7 @@ export default class DatabaseClient {
         };
     }
     async info(server, database) {
-        const res = await this.httpClient.request("GET", `/application/servers/${server}/databases/${database}`);
+        const res = await this.httpClient.request("GET", `/application/servers/${applicationServerId.parse(server)}/databases/${applicationServerDatabaseId.parse(database)}`);
         return {
             ...res,
             attributes: {
@@ -32,7 +34,7 @@ export default class DatabaseClient {
         };
     }
     async create(server, args) {
-        const res = await this.httpClient.request("POST", `/application/servers/${server}/databases`, args);
+        const res = await this.httpClient.request("POST", `/application/servers/${applicationServerId.parse(server)}/databases`, createApplicationDatabaseSchema.parse(args));
         return {
             ...res,
             attributes: {
@@ -43,6 +45,6 @@ export default class DatabaseClient {
         };
     }
     delete(server, database) {
-        return this.httpClient.request("DELETE", `/application/servers/${server}/databases/${database}`);
+        return this.httpClient.request("DELETE", `/application/servers/${applicationServerId.parse(server)}/databases/${applicationServerDatabaseId.parse(database)}`);
     }
 }

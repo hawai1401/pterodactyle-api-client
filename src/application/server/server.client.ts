@@ -1,9 +1,19 @@
+import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
 import type {
   UserServer,
   UserServerAttributesWithDate,
 } from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
+import {
+  applicationServerExternalId,
+  applicationServerId,
+  createApplicationDatabaseSchema,
+  createServerSchema,
+  editApplicationServerConfigurationSchema,
+  editApplicationServerDetailsSchema,
+  editApplicationServerStartupSchema,
+} from "./server.schemas.js";
 import type {
   ApplicationServerList,
   CreateServerArgs,
@@ -45,7 +55,7 @@ export default class ServerClient {
     if (id) {
       const res = await this.httpClient.request<
         UserServer<UserServerAttributesWithDate<string>>
-      >("GET", `/application/servers/${id}`);
+      >("GET", `/application/servers/${applicationServerId.parse(id)}`);
       return {
         ...res,
         attributes: {
@@ -57,7 +67,10 @@ export default class ServerClient {
     } else if (external_id) {
       const res = await this.httpClient.request<
         UserServer<UserServerAttributesWithDate<string>>
-      >("GET", `/application/servers/external/${external_id}`);
+      >(
+        "GET",
+        `/application/servers/external/${applicationServerExternalId.parse(external_id)}`,
+      );
       return {
         ...res,
         attributes: {
@@ -68,15 +81,15 @@ export default class ServerClient {
       };
     } else
       throw new Error(
-        "Vous devez spécifier au moins un des 2 paramètres de recherche d'un utilisateur !",
+        "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
       );
   }
 
   async create(options: CreateServerArgs) {
     const res = await this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>,
-      CreateServerArgs
-    >("POST", `/application/servers`, options);
+      z.infer<typeof createServerSchema>
+    >("POST", `/application/servers`, createServerSchema.parse(options));
     return {
       ...res,
       attributes: {
@@ -91,7 +104,7 @@ export default class ServerClient {
     server: number,
     { details, configuration, startup }: EditApplicationServerArgs,
   ) {
-    const basePath = `/application/servers/${server}`;
+    const basePath = `/application/servers/${applicationServerId.parse(server)}`;
     const requests: Promise<
       UserServer<UserServerAttributesWithDate<string>>
     >[] = [];
@@ -99,22 +112,34 @@ export default class ServerClient {
       requests.push(
         this.httpClient.request<
           UserServer<UserServerAttributesWithDate<string>>,
-          EditApplicationServerDetailsArgs
-        >("PATCH", `${basePath}/details`, details),
+          z.infer<typeof editApplicationServerDetailsSchema>
+        >(
+          "PATCH",
+          `${basePath}/details`,
+          editApplicationServerDetailsSchema.parse(details),
+        ),
       );
     if (configuration)
       requests.push(
         this.httpClient.request<
           UserServer<UserServerAttributesWithDate<string>>,
-          EditApplicationServerConfigurationArgs
-        >("PATCH", `${basePath}/build`, configuration),
+          z.infer<typeof editApplicationServerConfigurationSchema>
+        >(
+          "PATCH",
+          `${basePath}/build`,
+          editApplicationServerConfigurationSchema.parse(configuration),
+        ),
       );
     if (startup)
       requests.push(
         this.httpClient.request<
           UserServer<UserServerAttributesWithDate<string>>,
-          EditApplicationServerStartupArgs
-        >("PATCH", `${basePath}/startup`, startup),
+          z.infer<typeof editApplicationServerStartupSchema>
+        >(
+          "PATCH",
+          `${basePath}/startup`,
+          editApplicationServerStartupSchema.parse(startup),
+        ),
       );
 
     if (requests.length === 0)
@@ -135,24 +160,33 @@ export default class ServerClient {
   suspend(id: number) {
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${id}/suspend`);
+    >("POST", `/application/servers/${applicationServerId.parse(id)}/suspend`);
   }
 
   unsuspend(id: number) {
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${id}/unsuspend`);
+    >(
+      "POST",
+      `/application/servers/${applicationServerId.parse(id)}/unsuspend`,
+    );
   }
 
   reinstall(id: number) {
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${id}/reinstall`);
+    >(
+      "POST",
+      `/application/servers/${applicationServerId.parse(id)}/reinstall`,
+    );
   }
 
   delete(id: number, force?: boolean | undefined) {
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >("DELETE", `/application/servers/${id}${force ? "?force=true" : ""}`);
+    >(
+      "DELETE",
+      `/application/servers/${applicationServerId.parse(id)}${force ? "?force=true" : ""}`,
+    );
   }
 }

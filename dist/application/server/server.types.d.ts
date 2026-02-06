@@ -4,31 +4,33 @@ export interface ApplicationServerList extends ListwithPagination {
     data: UserServerAttributesWithDate<string>[];
 }
 export interface CreateServerArgs extends BaseArgs {
+    external_id?: string | undefined;
     name: string;
+    description?: string | undefined;
     user: number;
     egg: number;
+    docker_image?: string | undefined;
+    startup?: string | undefined;
+    environment?: Record<EnvironmentVariable, string> | undefined;
+    skip_scripts?: boolean | undefined;
     limits: {
         memory: number;
         swap: number;
         disk: number;
-        cpu: number;
         io: number;
         threads?: string | undefined;
-        oom_disabled?: boolean | undefined;
+        cpu: number;
     };
     feature_limits: {
         databases: number;
-        allocations: number;
         backups: number;
+        allocations?: number | undefined;
     };
     allocation: {
-        [key: string]: number | number[];
         default: number;
-        additional?: number[];
+        additional?: number[] | undefined;
     };
-    docker_image?: string | undefined;
-    startup?: string | undefined;
-    environment?: Record<EnvironmentVariable, string> | undefined;
+    start_on_completion?: boolean | undefined;
 }
 export interface EditApplicationServerDetailsArgs extends BaseArgs {
     name: string;
@@ -38,12 +40,15 @@ export interface EditApplicationServerDetailsArgs extends BaseArgs {
 }
 export interface EditApplicationServerConfigurationArgs extends BaseArgs {
     allocation: number;
-    memory: number;
-    swap: number;
-    disk: number;
-    io: number;
-    cpu: number;
-    threads?: string | undefined;
+    oom_disabled?: boolean | undefined;
+    limits: {
+        memory?: number | undefined;
+        swap?: number | undefined;
+        disk?: number | undefined;
+        io?: number | undefined;
+        threads?: string | undefined;
+        cpu?: number | undefined;
+    };
     feature_limits: {
         databases: number;
         backups: number;
@@ -51,7 +56,6 @@ export interface EditApplicationServerConfigurationArgs extends BaseArgs {
     };
     add_allocations?: number[] | undefined;
     remove_allocations?: number[] | undefined;
-    oom_disabled?: boolean | undefined;
 }
 export interface EditApplicationServerStartupArgs extends BaseArgs {
     startup: string;

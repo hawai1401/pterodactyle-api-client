@@ -1,4 +1,6 @@
+import z from "zod";
 import type HttpClient from "../../../class/HttpClient.js";
+import { applicationServerDatabaseId, applicationServerId, createApplicationDatabaseSchema } from "../server.schemas.js";
 import type {
   ApplicationDatabase,
   ApplicationDatabaseList,
@@ -17,7 +19,7 @@ export default class DatabaseClient {
   async list(server: number) {
     const res = await this.httpClient.request<ApplicationDatabaseList>(
       "GET",
-      `/application/servers/${server}/databases`,
+      `/application/servers/${applicationServerId.parse(server)}/databases`,
     );
     return {
       ...res,
@@ -35,7 +37,7 @@ export default class DatabaseClient {
   async info(server: number, database: number) {
     const res = await this.httpClient.request<ApplicationDatabase<string>>(
       "GET",
-      `/application/servers/${server}/databases/${database}`,
+      `/application/servers/${applicationServerId.parse(server)}/databases/${applicationServerDatabaseId.parse(database)}`,
     );
     return {
       ...res,
@@ -50,8 +52,12 @@ export default class DatabaseClient {
   async create(server: number, args: CreateApplicationDatabase) {
     const res = await this.httpClient.request<
       CreatedApplicationDatabase,
-      CreateApplicationDatabase
-    >("POST", `/application/servers/${server}/databases`, args);
+      z.infer<typeof createApplicationDatabaseSchema>
+    >(
+      "POST",
+      `/application/servers/${applicationServerId.parse(server)}/databases`,
+      createApplicationDatabaseSchema.parse(args),
+    );
     return {
       ...res,
       attributes: {
@@ -65,7 +71,7 @@ export default class DatabaseClient {
   delete(server: number, database: number) {
     return this.httpClient.request<void>(
       "DELETE",
-      `/application/servers/${server}/databases/${database}`,
+      `/application/servers/${applicationServerId.parse(server)}/databases/${applicationServerDatabaseId.parse(database)}`,
     );
   }
 }
