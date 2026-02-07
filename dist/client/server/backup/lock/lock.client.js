@@ -1,10 +1,13 @@
-import { userServerBackupId, userServerId } from "../../server.schemas.js";
 export default class LockClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    backup;
+    constructor(httpClient, server, backup) {
         this.httpClient = httpClient;
+        this.server = server;
+        this.backup = backup;
     }
-    toggle(id, backup) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}/lock`);
+    toggle() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/backups/${this.backup}/lock`);
     }
 }

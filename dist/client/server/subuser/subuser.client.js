@@ -1,24 +1,15 @@
-import { createSubuserSchema, editSubuserSchema, userServerId, userServerSubuserId, } from "../server.schemas.js";
+import { editSubuserSchema, userServerSubuserId } from "../server.schemas.js";
 export default class SubuserClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    subuser;
+    constructor(httpClient, server, subuser) {
         this.httpClient = httpClient;
+        this.server = server;
+        this.subuser = userServerSubuserId.parse(subuser);
     }
-    async list(id) {
-        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/users`);
-        return {
-            ...res,
-            data: res.data.map((subuser) => ({
-                ...subuser,
-                attributes: {
-                    ...subuser.attributes,
-                    created_at: new Date(subuser.attributes.created_at),
-                },
-            })),
-        };
-    }
-    async info(id, subuser) {
-        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`);
+    async info() {
+        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/users/${this.subuser}`);
         return {
             ...res,
             attributes: {
@@ -27,8 +18,8 @@ export default class SubuserClient {
             },
         };
     }
-    async create(id, options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/users`, createSubuserSchema.parse(options));
+    async edit(options) {
+        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/users/${this.subuser}`, editSubuserSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -37,17 +28,7 @@ export default class SubuserClient {
             },
         };
     }
-    async edit(id, subuser, options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`, editSubuserSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-            },
-        };
-    }
-    delete(id, subuser) {
-        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`);
+    delete() {
+        return this.httpClient.request("DELETE", `/client/servers/${this.server}/users/${this.subuser}`);
     }
 }

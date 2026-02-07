@@ -1,49 +1,24 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type {
-  CreateDatabaseArgs,
-  DatabaseList,
-  DatabaseWithPassword,
-} from "./database.types.js";
+import { userServerDatabaseId } from "../server.schemas.js";
 import PasswordClient from "./password/password.client.js";
-import {
-  createDatabaseSchema,
-  userServerDatabaseId,
-  userServerId,
-} from "../server.schemas.js";
 
 export default class DatabaseClient {
   public password: PasswordClient;
+  readonly database: string;
 
-  constructor(private httpClient: HttpClient) {
-    this.password = new PasswordClient(httpClient);
+  constructor(
+    private httpClient: HttpClient,
+    readonly server: string,
+    database: string,
+  ) {
+    this.password = new PasswordClient(httpClient, server, database);
+    this.database = userServerDatabaseId.parse(database);
   }
 
-  list(id: string) {
-    return this.httpClient.request<DatabaseList>(
-      "GET",
-      `/client/servers/${userServerId.parse(id)}/databases`,
-    );
-  }
-
-  async create(id: string, options: CreateDatabaseArgs) {
-    const res = await this.httpClient.request<
-      DatabaseWithPassword,
-      CreateDatabaseArgs
-    >(
-      "POST",
-      `/client/servers/${userServerId.parse(id)}/databases`,
-      createDatabaseSchema.parse(options),
-    );
-    return {
-      ...res,
-      password: res.attributes.relationships.password.attributes.password,
-    };
-  }
-
-  delete(id: string, database: string) {
+  delete() {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${userServerId.parse(id)}/databases/${userServerDatabaseId.parse(database)}`,
+      `/client/servers/${this.server}/databases/${this.database}`,
     );
   }
 }

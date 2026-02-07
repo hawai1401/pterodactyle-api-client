@@ -1,19 +1,21 @@
 import HttpClient from "../../../../class/HttpClient.js";
 import WebSocket from "ws";
-import { userServerId, userServerWebsocketSchema, } from "../../server.schemas.js";
+import { userServerWebsocketSchema } from "../../server.schemas.js";
 export default class WebsocketClient {
     httpClient;
     panelUrl;
-    constructor(httpClient, panelUrl) {
+    server;
+    constructor(httpClient, panelUrl, server) {
         this.httpClient = httpClient;
         this.panelUrl = panelUrl;
+        this.server = server;
     }
-    credentials(id) {
-        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/websocket`);
+    credentials() {
+        return this.httpClient.request("GET", `/client/servers/${this.server}/websocket`);
     }
-    async connect(id, options = {}) {
+    async connect(options = {}) {
         const { onConsoleOutput, onStats, onStatusChange } = userServerWebsocketSchema.parse(options);
-        const credentials = await this.credentials(userServerId.parse(id));
+        const credentials = await this.credentials();
         return new Promise((resolve, reject) => {
             const socket = new WebSocket(credentials.data.socket, {
                 headers: {

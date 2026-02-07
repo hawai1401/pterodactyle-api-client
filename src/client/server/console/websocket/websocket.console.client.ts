@@ -6,28 +6,26 @@ import type {
 } from "./websocket.console.types.js";
 import type { Signal } from "../../server.types.js";
 import WebSocket from "ws";
-import {
-  userServerId,
-  userServerWebsocketSchema,
-} from "../../server.schemas.js";
+import { userServerWebsocketSchema } from "../../server.schemas.js";
 
 export default class WebsocketClient {
   constructor(
     private httpClient: HttpClient,
-    readonly panelUrl: URL,
+    private panelUrl: URL,
+    readonly server: string,
   ) {}
 
-  credentials(id: string) {
+  credentials() {
     return this.httpClient.request<WebSocketCredentials>(
       "GET",
-      `/client/servers/${userServerId.parse(id)}/websocket`,
+      `/client/servers/${this.server}/websocket`,
     );
   }
 
-  async connect(id: string, options: WebSocketCredentialsOptions = {}) {
+  async connect(options: WebSocketCredentialsOptions = {}) {
     const { onConsoleOutput, onStats, onStatusChange } =
       userServerWebsocketSchema.parse(options);
-    const credentials = await this.credentials(userServerId.parse(id));
+    const credentials = await this.credentials();
 
     return new Promise<{
       sendCommand(command: string): void;

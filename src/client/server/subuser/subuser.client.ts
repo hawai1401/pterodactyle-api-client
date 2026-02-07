@@ -1,41 +1,22 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type {
-  CreateSubuserArgs,
-  EditSubuserArgs,
-  Subuser,
-  SubuserList,
-} from "./subuser.types.js";
-import {
-  createSubuserSchema,
-  editSubuserSchema,
-  userServerId,
-  userServerSubuserId,
-} from "../server.schemas.js";
+import type { EditSubuserArgs, Subuser } from "../subuser.types.js";
+import { editSubuserSchema, userServerSubuserId } from "../server.schemas.js";
 
 export default class SubuserClient {
-  constructor(private httpClient: HttpClient) {}
+  readonly subuser: string;
 
-  async list(id: string) {
-    const res = await this.httpClient.request<SubuserList>(
-      "GET",
-      `/client/servers/${userServerId.parse(id)}/users`,
-    );
-    return {
-      ...res,
-      data: res.data.map((subuser) => ({
-        ...subuser,
-        attributes: {
-          ...subuser.attributes,
-          created_at: new Date(subuser.attributes.created_at),
-        },
-      })),
-    };
+  constructor(
+    private httpClient: HttpClient,
+    readonly server: string,
+    subuser: string,
+  ) {
+    this.subuser = userServerSubuserId.parse(subuser);
   }
 
-  async info(id: string, subuser: string) {
+  async info() {
     const res = await this.httpClient.request<Subuser<string>>(
       "GET",
-      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
+      `/client/servers/${this.server}/users/${this.subuser}`,
     );
     return {
       ...res,
@@ -46,28 +27,10 @@ export default class SubuserClient {
     };
   }
 
-  async create(id: string, options: CreateSubuserArgs) {
-    const res = await this.httpClient.request<
-      Subuser<string>,
-      CreateSubuserArgs
-    >(
-      "POST",
-      `/client/servers/${userServerId.parse(id)}/users`,
-      createSubuserSchema.parse(options),
-    );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-      },
-    };
-  }
-
-  async edit(id: string, subuser: string, options: EditSubuserArgs) {
+  async edit(options: EditSubuserArgs) {
     const res = await this.httpClient.request<Subuser<string>, EditSubuserArgs>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
+      `/client/servers/${this.server}/users/${this.subuser}`,
       editSubuserSchema.parse(options),
     );
     return {
@@ -79,10 +42,10 @@ export default class SubuserClient {
     };
   }
 
-  delete(id: string, subuser: string) {
+  delete() {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
+      `/client/servers/${this.server}/users/${this.subuser}`,
     );
   }
 }

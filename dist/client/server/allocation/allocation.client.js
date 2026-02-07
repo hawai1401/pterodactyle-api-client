@@ -1,23 +1,20 @@
-import { allocationId, assignAllocationSchema, editAllocationSchema, userServerId, } from "../server.schemas.js";
-import z from "zod";
+import { allocationId, editAllocationSchema } from "../server.schemas.js";
 export default class AllocationClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    allocation;
+    constructor(httpClient, server, allocation) {
         this.httpClient = httpClient;
+        this.server = server;
+        this.allocation = allocationId.parse(allocation);
     }
-    list(id) {
-        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/network/allocations`);
+    setPrimary() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`);
     }
-    assign(id, options) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations`, assignAllocationSchema.parse(options));
+    edit(options = {}) {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/network/allocations/${this.allocation}`, editAllocationSchema.parse(options));
     }
-    setPrimary(id, allocation) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}/primary`);
-    }
-    edit(id, allocation, options = {}) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}`, editAllocationSchema.parse(options));
-    }
-    delete(id, allocation) {
-        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}`);
+    delete() {
+        return this.httpClient.request("DELETE", `/client/servers/${this.server}/network/allocations/${this.allocation}`);
     }
 }

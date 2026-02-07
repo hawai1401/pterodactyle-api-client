@@ -1,32 +1,51 @@
 import type HttpClient from "../../class/HttpClient.js";
-import ActivityClient from "./activity/activity.client.js";
+import type { Sort } from "../../types.js";
+import AllocationClient from "./allocation/allocation.client.js";
+import AllocationsClient from "./allocations/allocations.client.js";
+import BackupClient from "./backup/backup.client.js";
+import BackupsClient from "./backups/backups.client.js";
 import ConsoleClient from "./console/console.client.js";
+import DatabaseClient from "./database/database.client.js";
+import DatabasesClient from "./databases/databases.client.js";
 import ImageClient from "./image/image.client.js";
-import { AllocationClient, DatabaseClient, ScheduleClient, SubuserClient } from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
-import type { EditServerArgs, UserServerAttributes, UserServerList, UserServer } from "./server.types.js";
+import ScheduleClient from "./schedule/schedule.client.js";
+import SchedulesClient from "./schedules/schedules.client.js";
+import type { EditServerArgs, UserServerAttributes, UserServer, ServerEvent, ServerActivityList } from "./server.types.js";
 import StartupClient from "./startup/startup.client.js";
+import SubuserClient from "./subuser/subuser.client.js";
+import SubusersClient from "./subusers/subusers.client.js";
 export default class Servers {
     private httpClient;
     readonly panelUrl: URL;
-    activity: ActivityClient;
-    allocation: AllocationClient;
+    allocations: AllocationsClient;
+    backups: BackupsClient;
     console: ConsoleClient;
-    database: DatabaseClient;
+    databases: DatabasesClient;
     image: ImageClient;
-    ressource: RessourceClient;
     power: PowerClient;
-    schedule: ScheduleClient;
+    ressource: RessourceClient;
+    schedules: SchedulesClient;
     startup: StartupClient;
-    subser: SubuserClient;
-    constructor(httpClient: HttpClient, panelUrl: URL);
-    list(options: {
+    subusers: SubusersClient;
+    readonly id: string;
+    constructor(httpClient: HttpClient, panelUrl: URL, id: string);
+    activity<T extends ServerEvent>({ page, per_page, event, sort, }?: {
         page?: number | undefined;
         per_page?: number | undefined;
-    }): Promise<UserServerList<UserServerAttributes>>;
-    info(id: string): Promise<UserServer<UserServerAttributes>>;
-    edit(id: string, options: EditServerArgs): Promise<void>;
-    reinstall(id: string): Promise<void>;
+        event?: T | undefined;
+        sort?: {
+            timestamp?: Sort | undefined;
+        };
+    }): Promise<ServerActivityList<Date, T>>;
+    allocation(allocation: number): AllocationClient;
+    backup(backup: string): BackupClient;
+    database(database: string): DatabaseClient;
+    schedule(schedule: number): ScheduleClient;
+    subuser(subuser: string): SubuserClient;
+    info(): Promise<UserServer<UserServerAttributes>>;
+    edit(options: EditServerArgs): Promise<void>;
+    reinstall(): Promise<void>;
 }
 //# sourceMappingURL=server.client.d.ts.map

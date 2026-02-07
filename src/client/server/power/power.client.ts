@@ -1,44 +1,46 @@
 import type HttpClient from "../../../class/HttpClient.js";
 import type { PowerArgs } from "./power.types.js";
-import { userServerId } from "../server.schemas.js";
 
 export default class PowerClient {
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    readonly server: string,
+  ) {}
 
-  start(id: string) {
+  start() {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/power`,
+      `/client/servers/${this.server}/power`,
       {
         signal: "start",
       },
     );
   }
 
-  stop(id: string) {
+  stop() {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/power`,
+      `/client/servers/${this.server}/power`,
       {
         signal: "stop",
       },
     );
   }
 
-  restart(id: string) {
+  restart() {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/power`,
+      `/client/servers/${this.server}/power`,
       {
         signal: "restart",
       },
     );
   }
 
-  kill(id: string) {
+  kill() {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/power`,
+      `/client/servers/${this.server}/power`,
       {
         signal: "kill",
       },

@@ -1,10 +1,11 @@
-import { userServerId } from "../server.schemas.js";
 export default class RessourceClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    constructor(httpClient, server) {
         this.httpClient = httpClient;
+        this.server = server;
     }
-    usage(id) {
-        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}`);
+    usage() {
+        return this.httpClient.request("GET", `/client/servers/${this.server}`);
     }
 }

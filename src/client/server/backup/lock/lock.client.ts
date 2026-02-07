@@ -1,13 +1,16 @@
 import type HttpClient from "../../../../class/HttpClient.js";
-import { userServerBackupId, userServerId } from "../../server.schemas.js";
 
 export default class LockClient {
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    readonly server: string,
+    readonly backup: string,
+  ) {}
 
-  toggle(id: string, backup: string) {
+  toggle() {
     return this.httpClient.request<void>(
       "POST",
-      `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}/lock`,
+      `/client/servers/${this.server}/backups/${this.backup}/lock`,
     );
   }
 }

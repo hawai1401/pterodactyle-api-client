@@ -1,4 +1,4 @@
-import type { BaseArgs, List } from "../../../types.js";
+import type { List } from "../../../types.js";
 import type { Signal, TaskAction } from "../server.types.js";
 export type CronString = "*" | `${number}` | `*/${number}`;
 export interface ScheduleTask<T extends string | Date, A extends TaskAction = TaskAction> {
@@ -41,18 +41,5 @@ export interface Schedule<T extends string | Date> {
             tasks: ScheduleTaskList;
         };
     };
-}
-export interface ScheduleList extends List {
-    data: Schedule<string>[];
-}
-export interface CreateScheduleArgs extends BaseArgs {
-    name: string;
-    minute: CronString;
-    hour: CronString;
-    day_of_month: CronString;
-    month: CronString;
-    day_of_week: CronString;
-    is_active?: boolean | undefined;
-    only_when_online?: boolean | undefined;
 }
 //# sourceMappingURL=schedule.types.d.ts.map

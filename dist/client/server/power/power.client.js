@@ -1,26 +1,27 @@
-import { userServerId } from "../server.schemas.js";
 export default class PowerClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    constructor(httpClient, server) {
         this.httpClient = httpClient;
+        this.server = server;
     }
-    start(id) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/power`, {
+    start() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
             signal: "start",
         });
     }
-    stop(id) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/power`, {
+    stop() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
             signal: "stop",
         });
     }
-    restart(id) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/power`, {
+    restart() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
             signal: "restart",
         });
     }
-    kill(id) {
-        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/power`, {
+    kill() {
+        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
             signal: "kill",
         });
     }

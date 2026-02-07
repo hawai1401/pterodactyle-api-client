@@ -1,11 +1,14 @@
-import { userServerDatabaseId, userServerId } from "../../server.schemas.js";
 export default class PasswordClient {
     httpClient;
-    constructor(httpClient) {
+    server;
+    database;
+    constructor(httpClient, server, database) {
         this.httpClient = httpClient;
+        this.server = server;
+        this.database = database;
     }
-    async rotate(id, database) {
-        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/databases/${userServerDatabaseId.parse(database)}/rotate-password`);
+    async rotate() {
+        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/databases/${this.database}/rotate-password`);
         return {
             ...res,
             password: res.attributes.relationships.password.attributes.password,

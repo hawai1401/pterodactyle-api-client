@@ -1,10 +1,10 @@
 import z from "zod";
-import { paginationSchema } from "../../schemas.js";
-export const userServerId = z.union([z.string().length(8), z.uuidv4()]);
-export const userServerSubuserId = z.uuidv4();
+import { paginationSchema, uuidSchema } from "../../schemas.js";
+export const userServerId = z.union([z.string().length(8), uuidSchema]);
+export const userServerSubuserId = uuidSchema;
 export const userServerDatabaseId = z.string().length(8);
 export const userServerPort = z.int().positive().min(1024).max(65535);
-export const userServerBackupId = z.uuidv4();
+export const userServerBackupId = uuidSchema;
 export const userServerScheduleId = z.int().positive();
 export const userServerScheduleTaskId = z.int().positive();
 export const allocationId = z.coerce.number();

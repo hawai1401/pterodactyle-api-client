@@ -49,18 +49,3 @@ export interface Schedule<T extends string | Date> {
     };
   };
 }
-
-export interface ScheduleList extends List {
-  data: Schedule<string>[];
-}
-
-export interface CreateScheduleArgs extends BaseArgs {
-  name: string;
-  minute: CronString;
-  hour: CronString;
-  day_of_month: CronString;
-  month: CronString;
-  day_of_week: CronString;
-  is_active?: boolean | undefined;
-  only_when_online?: boolean | undefined;
-}

@@ -3,10 +3,11 @@ import type { WebSocketCredentials, WebSocketCredentialsOptions } from "./websoc
 import type { Signal } from "../../server.types.js";
 export default class WebsocketClient {
     private httpClient;
-    readonly panelUrl: URL;
-    constructor(httpClient: HttpClient, panelUrl: URL);
-    credentials(id: string): Promise<WebSocketCredentials>;
-    connect(id: string, options?: WebSocketCredentialsOptions): Promise<{
+    private panelUrl;
+    readonly server: string;
+    constructor(httpClient: HttpClient, panelUrl: URL, server: string);
+    credentials(): Promise<WebSocketCredentials>;
+    connect(options?: WebSocketCredentialsOptions): Promise<{
         sendCommand(command: string): void;
         sendSignal(state: Signal): void;
     }>;
