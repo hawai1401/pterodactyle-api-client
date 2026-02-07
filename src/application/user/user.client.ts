@@ -1,5 +1,6 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
+import { createUserSchema, externalUserId, userId } from "./user.schemas.js";
 import type {
   CreateUserArgs,
   User,
@@ -74,7 +75,7 @@ export default class UserClient {
         >
       >(
         "GET",
-        `/application/users/${id}${includeServers ? "?include=servers" : ""}`,
+        `/application/users/${userId.parse(id)}${includeServers ? "?include=servers" : ""}`,
       );
       return {
         ...res,
@@ -91,7 +92,7 @@ export default class UserClient {
         >
       >(
         "GET",
-        `/application/users/external/${external_id}${includeServers ? "?include=servers" : ""}`,
+        `/application/users/external/${externalUserId.parse(external_id)}${includeServers ? "?include=servers" : ""}`,
       );
       return {
         ...res,
@@ -108,40 +109,27 @@ export default class UserClient {
   }
 
   create(args: CreateUserArgs) {
-    const schema = z.object({
-      email: z.email(),
-      username: z.string(),
-      first_name: z.string(),
-      last_name: z.string(),
-      password: z.string().optional(),
-      language: z.string().optional(),
-      root_admin: z.boolean().optional(),
-      external_id: z.string().optional(),
-    });
     return this.httpClient.request<
       User<UserAttributes<string>>,
-      CreateUserArgs
-    >("POST", "/application/users", schema.parse(args));
+      z.infer<typeof createUserSchema>
+    >("POST", "/application/users", createUserSchema.parse(args));
   }
 
   edit(id: number, args: CreateUserArgs) {
-    const schema = z.object({
-      email: z.email(),
-      username: z.string(),
-      first_name: z.string(),
-      last_name: z.string(),
-      password: z.string().optional(),
-      language: z.string().optional(),
-      root_admin: z.boolean().optional(),
-      external_id: z.string().optional(),
-    });
     return this.httpClient.request<
       User<UserAttributes<string>>,
-      CreateUserArgs
-    >("PATCH", `/application/users/${id}`, schema.parse(args));
+      z.infer<typeof createUserSchema>
+    >(
+      "PATCH",
+      `/application/users/${userId.parse(id)}`,
+      createUserSchema.parse(args),
+    );
   }
 
   delete(id: number) {
-    return this.httpClient.request<void>("DELETE", `/application/users/${id}`);
+    return this.httpClient.request<void>(
+      "DELETE",
+      `/application/users/${userId.parse(id)}`,
+    );
   }
 }

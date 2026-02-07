@@ -1,4 +1,5 @@
 import z from "zod";
+import { createUserSchema, externalUserId, userId } from "./user.schemas.js";
 export default class UserClient {
     httpClient;
     constructor(httpClient) {
@@ -46,7 +47,7 @@ export default class UserClient {
     }
     async info({ id, external_id, }, { includeServers } = {}) {
         if (id) {
-            const res = await this.httpClient.request("GET", `/application/users/${id}${includeServers ? "?include=servers" : ""}`);
+            const res = await this.httpClient.request("GET", `/application/users/${userId.parse(id)}${includeServers ? "?include=servers" : ""}`);
             return {
                 ...res,
                 attributes: {
@@ -57,7 +58,7 @@ export default class UserClient {
             };
         }
         else if (external_id) {
-            const res = await this.httpClient.request("GET", `/application/users/external/${external_id}${includeServers ? "?include=servers" : ""}`);
+            const res = await this.httpClient.request("GET", `/application/users/external/${externalUserId.parse(external_id)}${includeServers ? "?include=servers" : ""}`);
             return {
                 ...res,
                 attributes: {
@@ -71,32 +72,12 @@ export default class UserClient {
             throw new Error("Vous devez spécifier au moins un des 2 paramètres de recherche d'un utilisateur !");
     }
     create(args) {
-        const schema = z.object({
-            email: z.email(),
-            username: z.string(),
-            first_name: z.string(),
-            last_name: z.string(),
-            password: z.string().optional(),
-            language: z.string().optional(),
-            root_admin: z.boolean().optional(),
-            external_id: z.string().optional(),
-        });
-        return this.httpClient.request("POST", "/application/users", schema.parse(args));
+        return this.httpClient.request("POST", "/application/users", createUserSchema.parse(args));
     }
     edit(id, args) {
-        const schema = z.object({
-            email: z.email(),
-            username: z.string(),
-            first_name: z.string(),
-            last_name: z.string(),
-            password: z.string().optional(),
-            language: z.string().optional(),
-            root_admin: z.boolean().optional(),
-            external_id: z.string().optional(),
-        });
-        return this.httpClient.request("PATCH", `/application/users/${id}`, schema.parse(args));
+        return this.httpClient.request("PATCH", `/application/users/${userId.parse(id)}`, createUserSchema.parse(args));
     }
     delete(id) {
-        return this.httpClient.request("DELETE", `/application/users/${id}`);
+        return this.httpClient.request("DELETE", `/application/users/${userId.parse(id)}`);
     }
 }
