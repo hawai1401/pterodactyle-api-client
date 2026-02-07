@@ -1,4 +1,4 @@
-import z from "zod";
+import { idSchema } from "../../schemas.js";
 
-export const nestId = z.int().positive();
-export const nestEggId = z.int().positive();
+export const nestId = idSchema;
+export const nestEggId = idSchema;

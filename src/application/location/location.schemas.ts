@@ -1,6 +1,7 @@
 import z from "zod";
+import { idSchema } from "../../schemas.js";
 
-export const locationId = z.int().positive();
+export const locationId = idSchema;
 
 export const createLocationSchema = z.object({
   short: z.string().min(3).max(60),

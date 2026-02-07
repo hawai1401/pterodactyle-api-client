@@ -1,13 +1,14 @@
 import z from "zod";
-export const applicationServerId = z.int().positive();
-export const applicationServerExternalId = z.string().min(1).max(191);
-export const applicationServerDatabaseId = z.int().positive();
+import { descriptionSchema, idSchema, nameSchema } from "../../schemas.js";
+export const applicationServerId = idSchema;
+export const applicationServerExternalId = nameSchema;
+export const applicationServerDatabaseId = idSchema;
 export const createServerSchema = z.object({
     external_id: applicationServerExternalId.optional(),
-    name: z.string().min(1).max(191),
-    description: z.string().optional(),
-    user: z.int().positive(),
-    egg: z.int().positive(),
+    name: nameSchema,
+    description: descriptionSchema,
+    user: idSchema,
+    egg: idSchema,
     docker_image: z
         .string()
         .max(191)

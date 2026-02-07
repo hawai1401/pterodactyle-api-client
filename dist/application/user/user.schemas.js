@@ -1,6 +1,7 @@
 import z from "zod";
-export const userId = z.int().positive();
-export const externalUserId = z.string().min(1).max(191);
+import { idSchema, nameSchema } from "../../schemas.js";
+export const userId = idSchema;
+export const externalUserId = nameSchema;
 export const createUserSchema = z.object({
     email: z.email().min(1).max(191),
     username: z.string().min(1).max(191),

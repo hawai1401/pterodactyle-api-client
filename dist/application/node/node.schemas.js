@@ -1,9 +1,10 @@
 import z from "zod";
-export const nodeId = z.int().positive();
+import { descriptionSchema, idSchema, nameSchema } from "../../schemas.js";
+export const nodeId = idSchema;
 export const createNodeSchema = z.object({
-    name: z.string().min(1).max(191),
-    description: z.string().optional(),
-    location_id: z.int().positive(),
+    name: nameSchema,
+    description: descriptionSchema,
+    location_id: idSchema,
     fqdn: z.string().min(1).max(191),
     scheme: z.enum(["https", "http"]),
     behind_proxy: z.boolean().optional(),

@@ -1,4 +1,4 @@
-import ApplicationAPI from "./application/application.client.js";
+import { ApplicationAPI } from "./application/index.js";
 import { ClientAPI } from "./client/index.js";
 export default class PterodactylAPIClient {
     panelUrl;

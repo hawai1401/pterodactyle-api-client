@@ -11,4 +11,4 @@ export declare const paginationSchema: z.ZodObject<{
         timestamp: z.ZodOptional<z.ZodLiteral<"ascending" | "descending">>;
     }, z.z.core.$strip>>;
 }, z.z.core.$strip>;
-//# sourceMappingURL=schemas.d.ts.map
+//# sourceMappingURL=common.schemas.d.ts.map
