@@ -9,3 +9,9 @@ export const createUserSchema = z.object({
     root_admin: z.boolean().optional(),
     external_id: z.string().min(1).max(191).optional(),
 });
+export const listUsersFilterSchema = z.object({
+    uuid: z.string().optional(),
+    username: z.string().optional(),
+    email: z.string().optional(),
+    external_id: z.string().optional(),
+});

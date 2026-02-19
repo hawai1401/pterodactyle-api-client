@@ -1,9 +1,23 @@
 import type HttpClient from "../../class/HttpClient.js";
 import type { CreateNodeArgs } from "./nodes.types.js";
+import type { BaseListArgs, Sort } from "../../types.js";
 export default class NodesClient {
     private httpClient;
     constructor(httpClient: HttpClient);
-    list(): Promise<{
+    list(options?: {
+        filter?: {
+            uuid?: string | undefined;
+            name?: string | undefined;
+            fqdn?: string | undefined;
+            daemon_token_id?: string | undefined;
+        } | undefined;
+        sort?: {
+            id?: Sort | undefined;
+            uuid?: Sort | undefined;
+            memory?: Sort | undefined;
+            disk?: Sort | undefined;
+        } | undefined;
+    } & BaseListArgs): Promise<{
         data: {
             attributes: {
                 created_at: Date;

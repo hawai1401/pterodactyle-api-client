@@ -29,4 +29,12 @@ export declare const createServerSchema: z.ZodObject<{
     }, z.z.core.$strip>;
     start_on_completion: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>;
+export declare const listServersFilterSchema: z.ZodObject<{
+    uuid: z.ZodOptional<z.ZodUUID>;
+    uuidShort: z.ZodOptional<z.ZodString>;
+    name: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodString>;
+    external_id: z.ZodOptional<z.ZodString>;
+}, z.z.core.$strip>;
 //# sourceMappingURL=servers.schemas.d.ts.map

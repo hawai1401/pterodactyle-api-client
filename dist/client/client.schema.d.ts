@@ -1,6 +1,6 @@
 import z from "zod";
 export declare const userServerFilterSchema: z.ZodObject<{
-    uuid: z.ZodOptional<z.ZodString>;
+    uuid: z.ZodOptional<z.ZodUUID>;
     name: z.ZodOptional<z.ZodString>;
     description: z.ZodOptional<z.ZodString>;
     external_id: z.ZodOptional<z.ZodString>;

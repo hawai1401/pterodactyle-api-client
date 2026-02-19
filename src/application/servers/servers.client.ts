@@ -4,19 +4,55 @@ import type {
   UserServer,
   UserServerAttributesWithDate,
 } from "../../client/server/server.types.js";
-import { createServerSchema } from "./servers.schemas.js";
+import {
+  createServerSchema,
+  listServersFilterSchema,
+} from "./servers.schemas.js";
 import type {
   ApplicationServerList,
   CreateServerArgs,
 } from "./servers.types.js";
+import type { BaseListArgs, Sort } from "../../types.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 
 export default class ServersClient {
   constructor(private httpClient: HttpClient) {}
 
-  async list() {
+  async list(
+    options: {
+      filter?:
+        | {
+            uuid?: string | undefined;
+            uuidShort?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_id?: string | undefined;
+          }
+        | undefined;
+      sort?:
+        | {
+            id?: Sort | undefined;
+            uuid?: Sort | undefined;
+          }
+        | undefined;
+    } & BaseListArgs = {},
+  ) {
+    const filter = listServersFilterSchema.optional().parse(options.filter);
+    const queries = buildQueryParams<
+      {
+        uuid?: string | undefined;
+        uuidShort?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_id?: string | undefined;
+      },
+      { id?: Sort | undefined; uuid?: Sort | undefined }
+    >({ ...options, filter });
     const res = await this.httpClient.request<ApplicationServerList>(
       "GET",
-      "/application/servers",
+      `/application/servers?${queries}`,
     );
     return {
       ...res,

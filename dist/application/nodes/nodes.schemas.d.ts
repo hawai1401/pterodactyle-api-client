@@ -17,4 +17,10 @@ export declare const createNodeSchema: z.ZodObject<{
     upload_size: z.ZodOptional<z.ZodInt>;
     maintenance_mode: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>;
+export declare const listNodesFilterSchema: z.ZodObject<{
+    uuid: z.ZodOptional<z.ZodString>;
+    name: z.ZodOptional<z.ZodString>;
+    fqdn: z.ZodOptional<z.ZodString>;
+    daemon_token_id: z.ZodOptional<z.ZodString>;
+}, z.z.core.$strip>;
 //# sourceMappingURL=nodes.schemas.d.ts.map

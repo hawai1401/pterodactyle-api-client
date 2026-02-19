@@ -9,4 +9,10 @@ export declare const createUserSchema: z.ZodObject<{
     root_admin: z.ZodOptional<z.ZodBoolean>;
     external_id: z.ZodOptional<z.ZodString>;
 }, z.z.core.$strip>;
+export declare const listUsersFilterSchema: z.ZodObject<{
+    uuid: z.ZodOptional<z.ZodString>;
+    username: z.ZodOptional<z.ZodString>;
+    email: z.ZodOptional<z.ZodString>;
+    external_id: z.ZodOptional<z.ZodString>;
+}, z.z.core.$strip>;
 //# sourceMappingURL=users.schemas.d.ts.map

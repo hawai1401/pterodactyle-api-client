@@ -1,12 +1,15 @@
 import z from "zod";
-import { createNodeSchema } from "./nodes.schemas.js";
+import { createNodeSchema, listNodesFilterSchema } from "./nodes.schemas.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 export default class NodesClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
-    async list() {
-        const res = await this.httpClient.request("GET", "/application/nodes");
+    async list(options = {}) {
+        const filter = listNodesFilterSchema.optional().parse(options.filter);
+        const queries = buildQueryParams({ ...options, filter });
+        const res = await this.httpClient.request("GET", `/application/nodes?${queries}`);
         return {
             ...res,
             data: res.data.map((node) => ({

@@ -1,6 +1,6 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
-import { createUserSchema } from "./users.schemas.js";
+import { createUserSchema, listUsersFilterSchema } from "./users.schemas.js";
 import type {
   CreateUserArgs,
   User,
@@ -8,28 +8,56 @@ import type {
   UserList,
   UserWithServersAttributes,
 } from "./users.types.js";
+import type { BaseListArgs, Sort } from "../../types.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 
 export default class UsersClient {
   constructor(private httpClient: HttpClient) {}
 
-  async list<T extends boolean | undefined>({
-    includeServers,
-  }: { includeServers?: T } = {}) {
+  async list<T extends boolean | undefined>(
+    options: {
+      includeServers?: T | undefined;
+      filter?:
+        | {
+            uuid?: string | undefined;
+            username?: string | undefined;
+            email?: string | undefined;
+            external_id?: string | undefined;
+          }
+        | undefined;
+      sort?:
+        | {
+            id?: Sort | undefined;
+            uuid?: Sort | undefined;
+          }
+        | undefined;
+    } & BaseListArgs = {},
+  ) {
+    const filter = listUsersFilterSchema.optional().parse(options.filter);
+    const queries = buildQueryParams<
+      {
+        uuid?: string | undefined;
+        username?: string | undefined;
+        email?: string | undefined;
+        external_id?: string | undefined;
+      },
+      { id?: Sort | undefined; uuid?: Sort | undefined }
+    >({ ...options, filter });
     const res = await this.httpClient.request<
       UserList<
         T extends true ? UserWithServersAttributes : UserAttributes<string>
       >
-    >("GET", `/application/users${includeServers ? "?include=servers" : ""}`);
-    return includeServers
-      ? {
-          ...res,
-          data: res.data.map((user) => ({
-            ...user,
-            attributes: {
-              ...user.attributes,
-              created_at: new Date(user.attributes.created_at),
-              updated_at: new Date(user.attributes.updated_at),
-              relationships: {
+    >("GET", `/application/users?${queries}`);
+    return {
+      ...res,
+      data: res.data.map((user) => ({
+        ...user,
+        attributes: {
+          ...user.attributes,
+          created_at: new Date(user.attributes.created_at),
+          updated_at: new Date(user.attributes.updated_at),
+          relationships: options.includeServers
+            ? {
                 ...(user as User<UserWithServersAttributes>).attributes
                   .relationships,
                 servers: {
@@ -44,21 +72,11 @@ export default class UsersClient {
                     },
                   })),
                 },
-              },
-            },
-          })),
-        }
-      : {
-          ...res,
-          data: res.data.map((user) => ({
-            ...user,
-            attributes: {
-              ...user.attributes,
-              created_at: new Date(user.attributes.created_at),
-              updated_at: new Date(user.attributes.updated_at),
-            },
-          })),
-        };
+              }
+            : undefined,
+        },
+      })),
+    };
   }
 
   create(args: CreateUserArgs) {

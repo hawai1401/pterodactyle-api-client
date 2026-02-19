@@ -1,9 +1,18 @@
 import type HttpClient from "../../class/HttpClient.js";
 import type { CreateLocationArgs } from "./locations.types.js";
+import type { BaseListArgs, Sort } from "../../types.js";
 export default class LocationsClient {
     private httpClient;
     constructor(httpClient: HttpClient);
-    list(): Promise<{
+    list(options?: {
+        filter?: {
+            short?: string | undefined;
+            long?: string | undefined;
+        };
+        sort?: {
+            id?: Sort | undefined;
+        };
+    } & BaseListArgs): Promise<{
         data: {
             attributes: {
                 created_at: Date;

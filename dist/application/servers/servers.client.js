@@ -1,12 +1,15 @@
 import z from "zod";
-import { createServerSchema } from "./servers.schemas.js";
+import { createServerSchema, listServersFilterSchema, } from "./servers.schemas.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 export default class ServersClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
-    async list() {
-        const res = await this.httpClient.request("GET", "/application/servers");
+    async list(options = {}) {
+        const filter = listServersFilterSchema.optional().parse(options.filter);
+        const queries = buildQueryParams({ ...options, filter });
+        const res = await this.httpClient.request("GET", `/application/servers?${queries}`);
         return {
             ...res,
             data: res.data.map((server) => ({

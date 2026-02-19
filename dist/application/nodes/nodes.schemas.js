@@ -18,3 +18,9 @@ export const createNodeSchema = z.object({
     upload_size: z.int().positive().optional(),
     maintenance_mode: z.boolean().optional(),
 });
+export const listNodesFilterSchema = z.object({
+    uuid: z.string().uuid().optional(),
+    name: z.string().optional(),
+    fqdn: z.string().optional(),
+    daemon_token_id: z.string().optional(),
+});

@@ -1,5 +1,5 @@
 import z from "zod";
-import { descriptionSchema, idSchema, nameSchema } from "../../schemas.js";
+import { descriptionSchema, idSchema, nameSchema, uuidSchema } from "../../schemas.js";
 
 export const createServerSchema = z.object({
   external_id: nameSchema.optional(),
@@ -36,4 +36,13 @@ export const createServerSchema = z.object({
     additional: z.array(z.int().positive()).optional(),
   }),
   start_on_completion: z.boolean().optional(),
+});
+
+export const listServersFilterSchema = z.object({
+  uuid: uuidSchema.optional(),
+  uuidShort: z.string().length(8).optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  external_id: z.string().optional(),
 });
