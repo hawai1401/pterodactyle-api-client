@@ -1,12 +1,14 @@
-import type z from "zod";
 import { ApplicationAPI } from "./application/index.js";
 import { ClientAPI } from "./client/index.js";
-import { clientSchema } from "./schemas.js";
 export default class PterodactylAPIClient {
     readonly panelUrl: URL;
     user: ClientAPI;
     admin: ApplicationAPI | undefined;
-    constructor(options: z.infer<typeof clientSchema>);
+    constructor(options: {
+        apiKey: string;
+        panelUrl: string;
+        role: "user" | "admin";
+    });
     isAdmin(): this is {
         admin: ApplicationAPI;
     };

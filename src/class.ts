@@ -8,7 +8,11 @@ export default class PterodactylAPIClient {
   public user: ClientAPI;
   public admin: ApplicationAPI | undefined;
 
-  constructor(options: z.infer<typeof clientSchema>) {
+  constructor(options: {
+    apiKey: string;
+    panelUrl: string;
+    role: "user" | "admin";
+  }) {
     const { apiKey, panelUrl, role } = clientSchema.parse(options);
 
     this.panelUrl = new URL(panelUrl);

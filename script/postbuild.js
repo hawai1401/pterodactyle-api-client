@@ -5,6 +5,7 @@ const dirs = fs
   .filter((name) => !name.includes(".") && name !== "class");
 
 for (const dir of dirs) {
+  if (dir === "utils") continue;
   const subDirs = fs
     .readdirSync(`./dist/${dir}`)
     .filter((name) => !name.includes("."));
@@ -16,8 +17,8 @@ for (const dir of dirs) {
   }
 
   fs.createWriteStream(`./dist/${dir}/index.cjs`).write(
-      `"use strict";\nconst pkg = require("./index.js");\nmodule.exports = pkg;\n`,
-    );
+    `"use strict";\nconst pkg = require("./index.js");\nmodule.exports = pkg;\n`,
+  );
 }
 
 fs.createWriteStream("./dist/index.cjs").write(
