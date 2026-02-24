@@ -1,27 +1,41 @@
-import type z from "zod";
 import { ApplicationAPI } from "./application/index.js";
 import { ClientAPI } from "./client/index.js";
 import { clientSchema } from "./schemas.js";
 
-export default class PterodactylAPIClient {
-  readonly panelUrl: URL;
-  public user: ClientAPI;
-  public admin: ApplicationAPI | undefined;
+type role = "user" | "admin";
 
-  constructor(options: {
-    apiKey: string;
-    panelUrl: string;
-    role: "user" | "admin";
-  }) {
-    const { apiKey, panelUrl, role } = clientSchema.parse(options);
+export default class PterodactylAPIClient<T extends "user" | "admin"> {
+  private apiKey: string;
+  readonly panelUrl: URL;
+  readonly role: T;
+  public user: ClientAPI;
+
+  constructor(options: { apiKey: string; panelUrl: string; role: T }) {
+    const { apiKey, panelUrl, role } = clientSchema.parse(options) as {
+      apiKey: string;
+      panelUrl: string;
+      role: T;
+    };
 
     this.panelUrl = new URL(panelUrl);
     this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey });
-
-    if (role === "admin")
-      this.admin = new ApplicationAPI({ panelUrl: this.panelUrl, apiKey });
+    this.role = role;
+    this.apiKey = apiKey;
   }
 
+  get admin(): T extends "admin" ? ApplicationAPI : never {
+    if (this.role === "admin")
+      // @ts-expect-error
+      return new ApplicationAPI({
+        panelUrl: this.panelUrl,
+        apiKey: this.apiKey,
+      });
+    else throw new Error("Client utilisateur uniquement !");
+  }
+
+  /**
+   * @deprecated Client is now typed, typescript will no longer throw errors if the role is admin
+   */
   isAdmin(): this is { admin: ApplicationAPI } {
     return this.admin !== undefined;
   }
