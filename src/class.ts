@@ -30,7 +30,8 @@ export default class PterodactylAPIClient<T extends "user" | "admin"> {
         panelUrl: this.panelUrl,
         apiKey: this.apiKey,
       });
-    else throw new Error("Client utilisateur uniquement !");
+    // @ts-expect-error
+    return;
   }
 
   /**

@@ -20,8 +20,8 @@ export default class PterodactylAPIClient {
                 panelUrl: this.panelUrl,
                 apiKey: this.apiKey,
             });
-        else
-            throw new Error("Client utilisateur uniquement !");
+        // @ts-expect-error
+        return;
     }
     /**
      * @deprecated Client is now typed, typescript will no longer throw errors if the role is admin
