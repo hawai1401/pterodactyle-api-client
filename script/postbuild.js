@@ -2,10 +2,11 @@ import fs from "fs";
 
 const dirs = fs
   .readdirSync("./dist")
-  .filter((name) => !name.includes(".") && name !== "class");
+  .filter(
+    (name) => !name.includes(".") && !(name === "class" || name === "utils"),
+  );
 
 for (const dir of dirs) {
-  if (dir === "utils") continue;
   const subDirs = fs
     .readdirSync(`./dist/${dir}`)
     .filter((name) => !name.includes("."));

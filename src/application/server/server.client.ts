@@ -1,9 +1,5 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
-import type {
-  UserServer,
-  UserServerInfoAttributes,
-} from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
 import {
   applicationServerIdSchema,
@@ -16,6 +12,7 @@ import type {
   EditApplicationServerArgs,
 } from "./server.types.js";
 import DatabasesClient from "./databases/databases.client.js";
+import type { ApplicationServer } from "../servers/servers.types.js";
 
 export default class ServerClient {
   public databases: DatabasesClient;
@@ -40,9 +37,7 @@ export default class ServerClient {
   }
 
   async info() {
-    const res = await this.httpClient.request<
-      UserServer<UserServerInfoAttributes>
-    >(
+    const res = await this.httpClient.request<ApplicationServer<string>>(
       "GET",
       `/application/servers/${this.id ?? `external/${this.external_id}`}`,
     );
@@ -59,11 +54,11 @@ export default class ServerClient {
   async edit({ details, configuration, startup }: EditApplicationServerArgs) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     const basePath = `/application/servers/${this.id}`;
-    const requests: Promise<UserServer<UserServerInfoAttributes>>[] = [];
+    const requests: Promise<ApplicationServer<string>>[] = [];
     if (details)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerInfoAttributes>,
+          ApplicationServer<string>,
           z.infer<typeof editApplicationServerDetailsSchema>
         >(
           "PATCH",
@@ -74,7 +69,7 @@ export default class ServerClient {
     if (configuration)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerInfoAttributes>,
+          ApplicationServer<string>,
           z.infer<typeof editApplicationServerConfigurationSchema>
         >(
           "PATCH",
@@ -85,7 +80,7 @@ export default class ServerClient {
     if (startup)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerInfoAttributes>,
+          ApplicationServer<string>,
           z.infer<typeof editApplicationServerStartupSchema>
         >(
           "PATCH",
@@ -111,7 +106,7 @@ export default class ServerClient {
 
   suspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+    return this.httpClient.request<void>(
       "POST",
       `/application/servers/${this.id}/suspend`,
     );
@@ -119,7 +114,7 @@ export default class ServerClient {
 
   unsuspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+    return this.httpClient.request<void>(
       "POST",
       `/application/servers/${this.id}/unsuspend`,
     );
@@ -127,7 +122,7 @@ export default class ServerClient {
 
   reinstall() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+    return this.httpClient.request<void>(
       "POST",
       `/application/servers/${this.id}/reinstall`,
     );
@@ -135,7 +130,7 @@ export default class ServerClient {
 
   delete(force?: boolean | undefined) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+    return this.httpClient.request<void>(
       "DELETE",
       `/application/servers/${this.id}${force ? "?force=true" : ""}`,
     );

@@ -14,8 +14,11 @@ export default class ServersClient {
             ...res,
             data: res.data.map((server) => ({
                 ...server,
-                created_at: new Date(server.created_at),
-                updated_at: new Date(server.updated_at),
+                attributes: {
+                    ...server.attributes,
+                    created_at: new Date(server.attributes.created_at),
+                    updated_at: new Date(server.attributes.updated_at),
+                },
             })),
         };
     }

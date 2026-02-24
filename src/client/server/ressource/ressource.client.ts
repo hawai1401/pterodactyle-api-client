@@ -10,7 +10,7 @@ export default class RessourceClient {
   usage() {
     return this.httpClient.request<Stats>(
       "GET",
-      `/client/servers/${this.server}`,
+      `/client/servers/${this.server}/resources`,
     );
   }
 }

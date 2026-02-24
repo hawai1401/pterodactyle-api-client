@@ -42,12 +42,17 @@ export default class UsersClient {
         external_id?: string | undefined;
       },
       { id?: Sort | undefined; uuid?: Sort | undefined }
-    >({ ...options, filter });
+    >({
+      page: options.page,
+      per_page: options.per_page,
+      sort: options.sort,
+      filter,
+    });
     const res = await this.httpClient.request<
       UserList<
         T extends true ? UserWithServersAttributes : UserAttributes<string>
       >
-    >("GET", `/application/users?${queries}`);
+    >("GET", `/application/users?${queries}${options.includeServers ? "&include=servers" : ""}`);
     return {
       ...res,
       data: res.data.map((user) => ({

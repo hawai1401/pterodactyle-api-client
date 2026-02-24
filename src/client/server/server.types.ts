@@ -1,10 +1,6 @@
-import type {
-  BaseArgs,
-  EnvironmentVariable,
-  IP,
-  ListwithPagination,
-  Tuple,
-} from "../../types.js";
+import type { BaseArgs, IP, ListwithPagination, Tuple } from "../../types.js";
+import type { AllocationList } from "./allocation.types.js";
+import type { EggVariableList } from "./startup/startup.types.js";
 
 export type ServerPermissions =
   | ServerControlPermissions
@@ -96,117 +92,81 @@ export interface EggVariable {
   };
 }
 
-export interface UserServerInfoAttributes {
-  id: number;
-  external_id: string | null;
-  uuid: string;
-  identifier: string;
-  name: string;
-  description: string;
-  server_owner: boolean;
-  status: "installing" | "suspended" | null;
-  suspended: boolean;
-  limits: {
-    memory: number;
-    swap: number;
-    disk: number;
-    io: number;
-    cpu: number;
-    threads: null | string;
-    oom_disabled: boolean;
-  };
-  feature_limits: {
-    databases: number;
-    allocations: number;
-    backups: number;
-  };
-  user: number;
-  node: number;
-  allocation: number;
-  nest: number;
-  egg: number;
-  container: {
-    startup_command: string;
-    image: string;
-    installed: number;
-    environment: Record<EnvironmentVariable, string>;
-  };
-  updated_at: string;
-  created_at: string;
-}
-
-export interface UserServerAttributes {
-  server_owner: boolean;
-  identifier: string;
-  internal_id: number;
-  uuid: string;
-  name: string;
-  is_node_under_maintenance: boolean;
-  description: string;
-  status: null;
-  is_suspended: boolean;
-  is_installing: boolean;
-  is_transferring: boolean;
-  node: string;
-  sftp_details: {
-    ip: string;
-    port: number;
-  };
-  invocation: string;
-  docker_image: string;
-  egg_features: string[];
-  feature_limits: {
-    databases: number;
-    allocations: number;
-    backups: number;
-  };
-  user_permissions: ServerPermissions[];
-  limits: {
-    memory: number;
-    swap: number;
-    disk: number;
-    io: number;
-    cpu: number;
-    threads: null | string;
-    oom_disabled: boolean;
-  };
-  relationships: {
-    allocations: {
-      object: "list";
-      data: Allocation[];
-    };
-    variables: {
-      object: "list";
-      data: EggVariable[];
-    };
-  };
-}
-
-export interface UserServerAttributesWithDate<
-  T extends string | Date,
-> extends UserServerAttributes {
-  updated_at: T;
-  created_at: T;
-}
-
-export interface UserServer<
-  T extends UserServerAttributes | UserServerAttributesWithDate<string> | UserServerInfoAttributes,
-> {
+export interface BaseUserServer {
   object: "server";
-  attributes: T;
+  attributes: {
+    server_owner: boolean;
+    identifier: string;
+    server_identifier: string;
+    internal_id: number;
+    uuid: string;
+    name: string;
+    node: string;
+    is_node_under_maintenance: boolean;
+    sftp_details: {
+      ip: string;
+      port: number;
+    };
+    description: string;
+    limits: {
+      memory: number;
+      swap: number;
+      disk: number;
+      io: number;
+      cpu: number;
+      threads: null | string;
+      oom_disabled: boolean;
+    };
+    invocation: string;
+    docker_image: string;
+    egg_features: string[];
+    feature_limits: {
+      databases: number;
+      allocations: number;
+      backups: number;
+    };
+    is_transferring: boolean;
+    relationships: {
+      allocations: AllocationList;
+      variables: EggVariableList;
+    };
+  };
 }
 
-export interface ServerInfo extends UserServer<UserServerAttributes> {
+export type UserServer = BaseUserServer &
+  (
+    | {
+        attributes: {
+          status: null;
+          is_installing: false;
+          is_suspended: false;
+        };
+      }
+    | {
+        attributes: {
+          status: "installing";
+          is_installing: true;
+          is_suspended: false;
+        };
+      }
+    | {
+        attributes: {
+          status: "suspended";
+          is_installing: false;
+          is_suspended: true;
+        };
+      }
+  );
+
+export type UserServerWithDetails = UserServer & {
   meta: {
     is_server_owner: boolean;
     user_permissions: ServerPermissions[];
   };
-}
+};
 
-export interface UserServerList<
-  T extends UserServerAttributes | UserServerAttributesWithDate<string>,
-> extends ListwithPagination {
-  data: UserServer<T>[];
+export interface UserServerList extends ListwithPagination {
+  data: UserServer[];
 }
 
 export type State = "running" | "starting" | "stopping" | "offline";

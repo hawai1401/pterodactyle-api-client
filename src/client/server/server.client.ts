@@ -21,10 +21,9 @@ import {
 } from "./server.schemas.js";
 import type {
   EditServerArgs,
-  UserServerInfoAttributes,
-  UserServer,
   ServerEvent,
   ServerActivityList,
+  UserServerWithDetails,
 } from "./server.types.js";
 import StartupClient from "./startup/startup.client.js";
 import SubuserClient from "./subuser/subuser.client.js";
@@ -133,18 +132,10 @@ export default class Servers {
   }
 
   info() {
-    return this.httpClient
-      .request<
-        UserServer<UserServerInfoAttributes>
-      >("GET", `/client/servers/${this.id}`)
-      .then((res) => ({
-        ...res,
-        attributes: {
-          ...res.attributes,
-          updated_at: new Date(res.attributes.updated_at),
-          created_at: new Date(res.attributes.created_at),
-        },
-      }));
+    return this.httpClient.request<UserServerWithDetails>(
+      "GET",
+      `/client/servers/${this.id}`,
+    );
   }
 
   edit(options: EditServerArgs) {

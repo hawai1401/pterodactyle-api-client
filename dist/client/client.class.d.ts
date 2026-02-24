@@ -1,6 +1,6 @@
 import type { BaseListArgs } from "../types.js";
 import { Account } from "./account/index.js";
-import { Server, type UserServerAttributes, type UserServerList } from "./server/index.js";
+import { Server, type UserServerList } from "./server/index.js";
 export default class ClientAPI {
     private httpClient;
     readonly panelUrl: URL;
@@ -9,14 +9,14 @@ export default class ClientAPI {
         apiKey: string;
         panelUrl: URL;
     });
-    servers(options?: BaseListArgs & {
+    servers(options?: (BaseListArgs & {
         filter?: {
             uuid?: string | undefined;
             name?: string | undefined;
             description?: string | undefined;
             external_id?: string | undefined;
         };
-    } | undefined): Promise<UserServerList<UserServerAttributes>>;
+    }) | undefined): Promise<UserServerList>;
     server(id: string): Server;
 }
 //# sourceMappingURL=client.class.d.ts.map

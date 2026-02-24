@@ -1,14 +1,11 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
-import type {
-  UserServer,
-  UserServerInfoAttributes,
-} from "../../client/server/server.types.js";
 import {
   createServerSchema,
   listServersFilterSchema,
 } from "./servers.schemas.js";
 import type {
+  ApplicationServer,
   ApplicationServerList,
   CreateServerArgs,
 } from "./servers.types.js";
@@ -58,15 +55,18 @@ export default class ServersClient {
       ...res,
       data: res.data.map((server) => ({
         ...server,
-        created_at: new Date(server.created_at),
-        updated_at: new Date(server.updated_at),
+        attributes: {
+          ...server.attributes,
+          created_at: new Date(server.attributes.created_at),
+          updated_at: new Date(server.attributes.updated_at),
+        },
       })),
     };
   }
 
   async create(options: CreateServerArgs) {
     const res = await this.httpClient.request<
-      UserServer<UserServerInfoAttributes>,
+      ApplicationServer<string>,
       z.infer<typeof createServerSchema>
     >("POST", `/application/servers`, createServerSchema.parse(options));
     return {

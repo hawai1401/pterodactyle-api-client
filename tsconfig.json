@@ -44,5 +44,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "exclude": ["dist", "script", "eslint.config.ts"]
+  "exclude": ["dist", "script", "./*.ts"]
 }

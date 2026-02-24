@@ -1,5 +1,5 @@
-import type { UserServer, UserServerAttributesWithDate } from "../../client/server/index.js";
 import type { BaseArgs, ListwithPagination } from "../../types.js";
+import type { ApplicationServer } from "../servers/servers.types.js";
 export interface UserAttributes<T extends string | Date> {
     id: number;
     external_id: null | string;
@@ -22,7 +22,7 @@ export interface UserWithServersAttributes extends UserAttributes<string> {
     relationships: {
         servers: {
             object: "list";
-            data: UserServer<UserServerAttributesWithDate<string>>[];
+            data: ApplicationServer<string>[];
         };
     };
 }

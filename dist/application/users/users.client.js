@@ -8,8 +8,13 @@ export default class UsersClient {
     }
     async list(options = {}) {
         const filter = listUsersFilterSchema.optional().parse(options.filter);
-        const queries = buildQueryParams({ ...options, filter });
-        const res = await this.httpClient.request("GET", `/application/users?${queries}`);
+        const queries = buildQueryParams({
+            page: options.page,
+            per_page: options.per_page,
+            sort: options.sort,
+            filter,
+        });
+        const res = await this.httpClient.request("GET", `/application/users?${queries}${options.includeServers ? "&include=servers" : ""}`);
         return {
             ...res,
             data: res.data.map((user) => ({

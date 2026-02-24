@@ -1,5 +1,4 @@
 import type HttpClient from "../../class/HttpClient.js";
-import type { UserServer, UserServerInfoAttributes } from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
 import type { ApplicationServerId, EditApplicationServerArgs } from "./server.types.js";
 import DatabasesClient from "./databases/databases.client.js";
@@ -15,13 +14,11 @@ export default class ServerClient {
             created_at: Date;
             updated_at: Date;
             id: number;
-            external_id: string | null;
+            external_id: null;
             uuid: string;
             identifier: string;
             name: string;
             description: string;
-            server_owner: boolean;
-            status: "installing" | "suspended" | null;
             suspended: boolean;
             limits: {
                 memory: number;
@@ -29,7 +26,7 @@ export default class ServerClient {
                 disk: number;
                 io: number;
                 cpu: number;
-                threads: null | string;
+                threads: string | null;
                 oom_disabled: boolean;
             };
             feature_limits: {
@@ -45,9 +42,125 @@ export default class ServerClient {
             container: {
                 startup_command: string;
                 image: string;
-                installed: number;
-                environment: Record<import("../../types.js").EnvironmentVariable, string>;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 0;
             };
+            status: "suspended";
+        } | {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 1;
+            };
+            status: "installing" | null;
+        };
+        object: "server";
+    } | {
+        attributes: {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 0;
+            };
+            status: "suspended";
+        } | {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 1;
+            };
+            status: "installing" | null;
         };
         object: "server";
     }>;
@@ -56,13 +169,11 @@ export default class ServerClient {
             created_at: Date;
             updated_at: Date;
             id: number;
-            external_id: string | null;
+            external_id: null;
             uuid: string;
             identifier: string;
             name: string;
             description: string;
-            server_owner: boolean;
-            status: "installing" | "suspended" | null;
             suspended: boolean;
             limits: {
                 memory: number;
@@ -70,7 +181,7 @@ export default class ServerClient {
                 disk: number;
                 io: number;
                 cpu: number;
-                threads: null | string;
+                threads: string | null;
                 oom_disabled: boolean;
             };
             feature_limits: {
@@ -86,15 +197,131 @@ export default class ServerClient {
             container: {
                 startup_command: string;
                 image: string;
-                installed: number;
-                environment: Record<import("../../types.js").EnvironmentVariable, string>;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 0;
             };
+            status: "suspended";
+        } | {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 1;
+            };
+            status: "installing" | null;
+        };
+        object: "server";
+    } | {
+        attributes: {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 0;
+            };
+            status: "suspended";
+        } | {
+            created_at: Date;
+            updated_at: Date;
+            id: number;
+            external_id: null;
+            uuid: string;
+            identifier: string;
+            name: string;
+            description: string;
+            suspended: boolean;
+            limits: {
+                memory: number;
+                swap: number;
+                disk: number;
+                io: number;
+                cpu: number;
+                threads: string | null;
+                oom_disabled: boolean;
+            };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                environment: Record<import("../../types.js").EnvironmentVariable, string | number>;
+            } & {
+                installed: 1;
+            };
+            status: "installing" | null;
         };
         object: "server";
     }>;
-    suspend(): Promise<UserServer<UserServerInfoAttributes>>;
-    unsuspend(): Promise<UserServer<UserServerInfoAttributes>>;
-    reinstall(): Promise<UserServer<UserServerInfoAttributes>>;
-    delete(force?: boolean | undefined): Promise<UserServer<UserServerInfoAttributes>>;
+    suspend(): Promise<void>;
+    unsuspend(): Promise<void>;
+    reinstall(): Promise<void>;
+    delete(force?: boolean | undefined): Promise<void>;
 }
 //# sourceMappingURL=server.client.d.ts.map
